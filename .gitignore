@@ -1,0 +1,8 @@
+.DS_STORE
+.vs/
+artifacts/
+bin/
+*.xproj.user
+project.lock.json
+src/VR/config.json
+temp_files/

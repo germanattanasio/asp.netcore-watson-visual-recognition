@@ -1,0 +1,113 @@
+﻿@using VR.Models
+@model WatsonVRManageClassifierViewModel
+@{
+    ViewBag.Title = "ASP.NET Core Watson Visual Recognition Starter Application";
+    Layout = "_Layout";
+}
+<div class="leftHalf">
+    <img class="newappIcon" src="~/images/newapp-icon.png">
+    <h1>
+        Welcome to the <span class="blue">Visual Recognition ASP.NET Core Application</span> on Bluemix!
+    </h1>
+    <p class="description">
+        To create a custom classifier, upload a .zip file containing at
+        least 10 pictures of the classifier (positive examples), a .zip
+        file containing at least 10 pictures of items which are similar but
+        not the same as the classifier (negative examples), and specify a name
+        for the new classifier.
+    </p>
+    <p class="description">
+        To delete a custom classifier, select it from the dropdown and click delete.
+        Note that this will only work with custom classifiers, and will not work with
+        built-in classifiers.
+    </p>
+</div>
+<div class="rightHalf">
+    <header>
+        <div class="title">
+            Create a custom classifier for the Watson Visual Recognition service
+        </div>
+    </header>
+    <br />
+    <section>
+        @if (Model != null)
+        {
+            @Html.ValidationSummary()
+            if (Model.Success && !string.IsNullOrEmpty(Model.ClassifierId))
+            {
+                if (Model.ActionType == WatsonVRClassifierAction.Create)
+                {
+                    <div class="well">
+                        @Html.ActionLink("Try out your new classifier", "Index", "Home", new { classifierId = Model.ClassifierId })
+                    </div>
+                }
+                else if (Model.ActionType == WatsonVRClassifierAction.Delete)
+                {
+                    <div class="well">
+                        Classifier deleted successfully.
+                    </div>
+                }
+                <br class="clear" />
+            }
+        }
+        @using (Html.BeginForm("Manage", "Home", FormMethod.Post, new { encType = "multipart/form-data" }))
+        {
+            @Html.ValidationSummary(true)
+            <div class="well">
+                <div>
+                    <div class="watsonClassifiedImageLeftColumn">
+                        Name:
+                    </div>
+                    <div class="watsonClassifiedImageRightColumn">
+                        @Html.TextBoxFor(m => m.ClassifierName, new { @class = "watsonClassifierNameInputBox" })
+                    </div>
+                </div>
+                <div class="formSpacer">&nbsp;</div>
+                <div class="clear">
+                    <div class="watsonClassifiedImageLeftColumn">
+                        Positive examples:
+                    </div>
+                    <div class="watsonClassifiedImageRightColumn">
+                        @Html.EditorFor(m => m.PositiveExamples)
+                    </div>
+                </div>
+                <div class="formSpacer">&nbsp;</div>
+                <div class="clear">
+                    <div class="watsonClassifiedImageLeftColumn">
+                        Negative examples:
+                    </div>
+                    <div class="watsonClassifiedImageRightColumn">
+                        @Html.EditorFor(m => m.NegativeExamples)
+                    </div>
+                </div>
+                <div class="formSpacer">&nbsp;</div>
+                <div class="clear">
+                    <input type="hidden" name="ActionType" value="Create" />
+                    <input type="submit" value="Submit" />
+                </div>
+            </div>
+        }
+        <br class="clear" />
+        @using (Html.BeginForm("Manage", "Home", FormMethod.Post))
+        {
+            @Html.ValidationSummary(true)
+            <div class="well">
+                <div class="clear">
+                    <div class="watsonClassifiedImageLeftColumn">
+                        Classifier to delete:
+                    </div>
+                    <div class="watsonClassifiedImageRightColumn">
+                        @Html.DropDownListFor(m => Model.ClassifierId, Model.ClassifierIds, "Select a classifier to delete")
+                    </div>
+                </div>
+                <div class="formSpacer">&nbsp;</div>
+                <div class="clear">
+                    <div class="watsonClassifiedImageLeftColumn">
+                        <input type="hidden" name="ActionType" value="Delete" />
+                        <input type="submit" value="Delete" />
+                    </div>
+                </div>
+            </div>
+        }
+    </section>
+</div>

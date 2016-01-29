@@ -1,0 +1,16 @@
+* text eol=crlf
+
+*.md text eol=crlf
+*.Config text eol=crlf
+*.cs text eol=crlf
+*.cshtml text eol=crlf
+*.css text eol=crlf
+*.json text eol=crlf
+*.md text eol=crlf
+*.sln text eol=crlf
+*.user text eol=crlf
+*.xproj text eol=crlf
+*.yml text eol=crlf
+
+*.png binary
+*.jpg binary

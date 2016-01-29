@@ -1,0 +1,11 @@
+﻿declared-services:
+  visual-recognition-service:
+    label: visual_recognition
+    plan: free
+applications:
+- name: sample-aspnetcore-visualrecognition
+  random-route: true
+  memory: 256M
+  services:
+  - visual-recognition-service
+buildpack: aspnet5-experimental

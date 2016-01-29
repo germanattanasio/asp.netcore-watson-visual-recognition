@@ -1,0 +1,106 @@
+﻿@model VR.Models.WatsonVRViewModel
+@{
+    ViewBag.Title = "ASP.NET Core Watson Visual Recognition Starter Application";
+    Layout = "_Layout";
+}
+<div class="leftHalf">
+    <img class="newappIcon" src="~/images/newapp-icon.png">
+    <h1>
+        Welcome to the <span class="blue">Visual Recognition ASP.NET Core Application</span> on Bluemix!
+    </h1>
+    <p class="description">
+        The IBM Watson Visual Recognition service classifies images based
+        on a default set of classifiers and custom user-created classifiers.
+    </p>
+    <p class="description">
+        The service will return all classifiers for which the confidence score
+        is greater than 50&percnt;, meaning that Watson is at least 50&percnt;
+        confident that the classifier matches the given image.  To limit the 
+        number of scores shown in the display, set &quot;Max Scores&quot;.
+        The service allows the caller to specify a specific set of classifiers
+        which are to be used, and this sample provides this functionality through
+        the classifier dropdown menu which can be used to specify a specific
+        classifier to use.
+    </p>
+    <p class="description">
+        The service accepts any jpg, jpeg, or png image file.  It will also
+        accept a zip file containing multiple images to classify and will return
+        results for all images contained in the zip file.
+
+        To create a new classifier, click on the &quot;Manage classifiers&quot; link.
+    </p>
+</div>
+<div class="rightHalf">
+    <header>
+        <div class="title">
+            Try the Watson Visual Recognition service
+        </div>
+    </header>
+    <br />
+    <section>
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { encType = "multipart/form-data" }))
+        {
+            @Html.ValidationSummary(false)
+            <div class="well">
+                <div class="watsonClassifiedImageContainer">
+                    <div class="watsonClassifiedImageLeftColumn">
+                        Classifier: (@Html.ActionLink("Manage classifiers", "Manage", "Home"))
+                    </div>
+                    <div class="watsonClassifiedImageRightColumn">
+                        @Html.DropDownListFor(m => Model.ClassifierId, Model.ClassifierIds, "All Classifiers")
+                    </div>
+                    <div class="formSpacer">&nbsp;</div>
+                    <div class="watsonClassifiedImageLeftColumn">
+                        Image or zip file:
+                    </div>
+                    <div class="watsonClassifiedImageRightColumn">
+                        @Html.EditorFor(m => m.ImageUpload)
+                    </div>
+                    <div class="formSpacer">&nbsp;</div>
+                    <div class="watsonClassifiedImageLeftColumn">
+                        Max scores:
+                    </div>
+                    <div class="watsonClassifiedImageRightColumn">
+                        @Html.TextBoxFor(m => m.MaxScores)
+                    </div>
+                    <div class="formSpacer">&nbsp;</div>
+                    <div class="watsonClassifiedImageLeftColumn">
+                        <input type="submit" value="Submit" />
+                    </div>
+                </div>
+            </div>
+            <br />
+        }
+        @if (Model != null && Model.ImageResults != null && Model.ImageResults.Any())
+        {
+            <div class="well">
+                @foreach (var image in Model.ImageResults)
+                {
+                    <div class="watsonClassifiedImageContainer">
+                        <div class="watsonClassifiedImageLeftColumn">
+                            <img class="watsonClassifiedImage" src="data:image/jpeg;base64,@Html.DisplayFor(base64Image => image.Base64Image)" />
+                        </div>
+                        <div class="watsonClassifiedImageRightColumn">
+                            <div class="watsonScore">
+                                <div class="watsonScoreName watsonScoreHeader">Classifier:</div>
+                                <div class="watsonScoreValue watsonScoreHeader">Score:</div>
+                            </div>
+                            <hr class="watsonScoreSeparator" />
+                            @foreach (var score in image.Scores)
+                            {
+                                @Html.Partial("_WatsonVRScoreViewModel", score)
+                            }
+                            @if (!image.Scores.Any()) {
+                                <div class="watsonScore">
+                                    Not a positive match with a confidence above &gt;50&percnt;
+                                </div>
+                            }
+                        </div>
+                    </div>
+                        <div style="clear:both;" />
+                        <hr class="watsonClassifiedImageSeparator" />
+                }
+            </div>
+        }
+    </section>
+</div>
