@@ -61,7 +61,7 @@ namespace VR.Services
 
         public async Task<WatsonVRViewModel> ClassifyAsync(string filePath, int? maxScores = null, params string[] classifierIds)
         {
-            WatsonVRViewModel viewModel = null;
+            WatsonVRViewModel viewModel = new WatsonVRViewModel();
             using (var client = VrClient())
             {
                 try
@@ -74,26 +74,30 @@ namespace VR.Services
                         MediaTypeHeaderValue.Parse("multipart/form-data");
                     var filename = Path.GetFileName(filePath);
                     var base64Images = new Dictionary<string, string>();
+                    Task extractImages = null;
                     if (Path.GetExtension(filePath).ToLowerInvariant() != ".zip")
                     {
                         base64Images.Add(filename, Convert.ToBase64String(File.ReadAllBytes(filePath)));
                     }
                     else
                     {
-                        var fileName = Path.GetFileNameWithoutExtension(filePath);
-                        var folder = Path.GetDirectoryName(filePath);
-                        var newTempFolder = Path.Combine(folder, fileName);
-                        System.IO.Compression.ZipFile.ExtractToDirectory(filePath, newTempFolder);
-                        foreach (var file in Directory.GetFiles(newTempFolder)
-                            .Where(m=> _acceptedImageTypes.Contains(Path.GetExtension(m).ToLowerInvariant())).ToList())
+                        extractImages = new TaskFactory().StartNew(() =>
                         {
-                            base64Images.Add(Path.GetFileName(file), Convert.ToBase64String(File.ReadAllBytes(file)));
-                        }
-                        foreach (var file in Directory.GetFiles(newTempFolder))
-                        {
-                            File.Delete(file);
-                        }
-                        Directory.Delete(newTempFolder);
+                            var fileName = Path.GetFileNameWithoutExtension(filePath);
+                            var folder = Path.GetDirectoryName(filePath);
+                            var newTempFolder = Path.Combine(folder, fileName);
+                            System.IO.Compression.ZipFile.ExtractToDirectory(filePath, newTempFolder);
+                            foreach (var file in Directory.GetFiles(newTempFolder)
+                                .Where(m => _acceptedImageTypes.Contains(Path.GetExtension(m).ToLowerInvariant())).ToList())
+                            {
+                                base64Images.Add(Path.GetFileName(file), Convert.ToBase64String(File.ReadAllBytes(file)));
+                            }
+                            foreach (var file in Directory.GetFiles(newTempFolder))
+                            {
+                                File.Delete(file);
+                            }
+                            Directory.Delete(newTempFolder);
+                        });
                     }
 
                     if (classifierIds != null)
@@ -110,7 +114,15 @@ namespace VR.Services
                     if (response.IsSuccessStatusCode)
                     {
                         var model = await response.Content.ReadAsAsync<WatsonVRResponse>();
+                        if (extractImages != null)
+                        {
+                            Task.WaitAll(extractImages);
+                        }
                         WatsonVRImagesMapper.Map(model, viewModel, base64Images, maxScores);
+                    }
+                    else
+                    {
+                        Console.WriteLine(msg);
                     }
                 }
                 catch (Exception ex)

@@ -45,12 +45,6 @@ namespace VR.Controllers
             {
                 viewModel = new WatsonVRViewModel();
                 ModelState.AddModelError("viewModel", "Form must be filled out completely before submitting");
-                viewModel.ClassifierIds = await GetClassifierSelectList(null);
-                if (!viewModel.ClassifierIds.Any())
-                {
-                    ModelState.AddModelError("ClassifierIds", "Failed to get classifier list from Watson service");
-                }
-                return View(viewModel);
             }
 
             string fileName = "";
@@ -81,12 +75,13 @@ namespace VR.Controllers
                 {
                     ModelState.AddModelError("Imageresults", "Failed to retrieve results from Watson service");
                 }
-                viewModel.ClassifierIds = await GetClassifierSelectList(viewModel.ClassifierId);
-                if (!viewModel.ClassifierIds.Any())
-                {
-                    ModelState.AddModelError("ClassifierIds", "Failed to get classifier list from Watson service");
-                }
                 System.IO.File.Delete(filePath);
+            }
+
+            viewModel.ClassifierIds = await GetClassifierSelectList(null);
+            if (!viewModel.ClassifierIds.Any())
+            {
+                ModelState.AddModelError("ClassifierIds", "Failed to get classifier list from Watson service");
             }
 
             return View(viewModel);

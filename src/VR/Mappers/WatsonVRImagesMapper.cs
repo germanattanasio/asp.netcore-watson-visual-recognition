@@ -9,6 +9,11 @@ namespace VR.Mappers
         public static void Map(WatsonVRResponse fromModel, WatsonVRViewModel toModel, Dictionary<string,string> base64Images,
             int? maxScores)
         {
+            if (toModel == null)
+            {
+                toModel = new WatsonVRViewModel();
+            }
+
             toModel.ImageResults = new List<WatsonVRImageViewModel>();
             foreach (var image in fromModel.Images)
             {
