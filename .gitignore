@@ -4,5 +4,5 @@ artifacts/
 bin/
 *.xproj.user
 project.lock.json
-src/VR/config.json
+src/VisualRecognition/config.json
 temp_files/

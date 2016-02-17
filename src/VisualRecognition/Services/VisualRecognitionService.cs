@@ -8,16 +8,16 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using VR.Mappers;
-using VR.Models;
+using VisualRecognition.Mappers;
+using VisualRecognition.Models;
 
-namespace VR.Services
+namespace VisualRecognition.Services
 {
-    public class WatsonVRService : IWatsonVRService
+    public class VisualRecognitionService : IVisualRecognitionService
     {
         private readonly HashSet<string> _acceptedImageTypes;
         private bool learningOptOut;
-        private readonly WatsonVRServiceCredentials _vrCreds;
+        private readonly Credentials _vrCreds;
         private const string VersionReleaseDate = "2015-12-02";
 
         // Specifies whether or not to share data with Watson for learning purposes
@@ -34,12 +34,12 @@ namespace VR.Services
             }
         }
 
-        public WatsonVRService(IOptions<WatsonVRServiceCredentials> optionsAccessor)
+        public VisualRecognitionService(IOptions<Credentials> optionsAccessor)
         {
             var creds = optionsAccessor.Value;
             if (creds != null)
             {
-                _vrCreds = new WatsonVRServiceCredentials
+                _vrCreds = new Credentials
                 {
                     Password = creds.Password,
                     Url = creds.Url,
@@ -59,9 +59,9 @@ namespace VR.Services
             };
         }
 
-        public async Task<WatsonVRViewModel> ClassifyAsync(string filePath, int? maxScores = null, params string[] classifierIds)
+        public async Task<VisualRecognitionViewModel> ClassifyAsync(string filePath, int? maxScores = null, params string[] classifierIds)
         {
-            WatsonVRViewModel viewModel = new WatsonVRViewModel();
+            VisualRecognitionViewModel viewModel = new VisualRecognitionViewModel();
             using (var client = VrClient())
             {
                 try
@@ -113,12 +113,12 @@ namespace VR.Services
                     var msg = string.Format("{0} {1}", response.StatusCode, response.ReasonPhrase);
                     if (response.IsSuccessStatusCode)
                     {
-                        var model = await response.Content.ReadAsAsync<WatsonVRResponse>();
+                        var model = await response.Content.ReadAsAsync<Response>();
                         if (extractImages != null)
                         {
                             Task.WaitAll(extractImages);
                         }
-                        WatsonVRImagesMapper.Map(model, viewModel, base64Images, maxScores);
+                        ImagesMapper.Map(model, viewModel, base64Images, maxScores);
                     }
                     else
                     {
@@ -133,9 +133,9 @@ namespace VR.Services
             return viewModel;
         }
 
-        public async Task<WatsonVRClassifierViewModel> CreateClassifierAsync(string positiveExamplesPath, string negativeExamplesPath, string classifierName)
+        public async Task<ClassifierViewModel> CreateClassifierAsync(string positiveExamplesPath, string negativeExamplesPath, string classifierName)
         {
-            WatsonVRClassifierViewModel viewModel = null;
+            ClassifierViewModel viewModel = null;
             using (var client = VrClient())
             {
                 try
@@ -164,8 +164,8 @@ namespace VR.Services
                     var msg = string.Format("{0} {1}", response.StatusCode, response.ReasonPhrase);
                     if (response.IsSuccessStatusCode)
                     {
-                        var model = await response.Content.ReadAsAsync<WatsonVRClassifier>();
-                        viewModel = WatsonVRClassifierMapper.Map(model);
+                        var model = await response.Content.ReadAsAsync<Classifier>();
+                        viewModel = ClassifierMapper.Map(model);
                     }
                 }
                 catch (Exception ex)
@@ -199,14 +199,14 @@ namespace VR.Services
             return false;
         }
 
-        public async Task<bool> DeleteClassifierAsync(WatsonVRClassifier classifier)
+        public async Task<bool> DeleteClassifierAsync(Classifier classifier)
         {
             return await DeleteClassifierAsync(classifier.ClassifierId);
         }
 
-        public async Task<WatsonVRClassifierViewModel> GetClassifierAsync(string classifierId)
+        public async Task<ClassifierViewModel> GetClassifierAsync(string classifierId)
         {
-            WatsonVRClassifierViewModel viewModel = null;
+            ClassifierViewModel viewModel = null;
             using (var client = VrClient())
             {
                 try
@@ -216,8 +216,8 @@ namespace VR.Services
                     var msg = string.Format("{0} {1}", response.StatusCode, response.ReasonPhrase);
                     if (response.IsSuccessStatusCode)
                     {
-                        var model = await response.Content.ReadAsAsync<WatsonVRClassifier>();
-                        viewModel = WatsonVRClassifierMapper.Map(model);
+                        var model = await response.Content.ReadAsAsync<Classifier>();
+                        viewModel = ClassifierMapper.Map(model);
                     }
                 }
                 catch (Exception ex)
@@ -228,9 +228,9 @@ namespace VR.Services
             return viewModel;
         }
 
-        public async Task<WatsonVRClassifiersResponse> GetClassifiersAsync()
+        public async Task<ClassifiersResponse> GetClassifiersAsync()
         {
-            WatsonVRClassifiersResponse model = null;
+            ClassifiersResponse model = null;
             using (var client = VrClient())
             {
                 try
@@ -240,7 +240,7 @@ namespace VR.Services
                     var msg = string.Format("{0} {1}", response.StatusCode, response.ReasonPhrase);
                     if (response.IsSuccessStatusCode)
                     {
-                        model = await response.Content.ReadAsAsync<WatsonVRClassifiersResponse>();
+                        model = await response.Content.ReadAsAsync<ClassifiersResponse>();
                     }
                 }
                 catch (Exception ex)

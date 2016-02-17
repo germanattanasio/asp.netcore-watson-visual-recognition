@@ -6,9 +6,11 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>be98a5aa-a9a3-4524-afc2-5aec7608a8d8</ProjectGuid>
-    <RootNamespace>wqa</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">..\..\artifacts\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">..\..\artifacts\bin\$(MSBuildProjectName)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <RootNamespace>VisualRecognition</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>

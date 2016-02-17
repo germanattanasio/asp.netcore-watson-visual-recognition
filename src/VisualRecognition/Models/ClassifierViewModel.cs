@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace VR.Models
+namespace VisualRecognition.Models
 {
-    public class WatsonVRClassifierViewModel
+    public class ClassifierViewModel
     {
         public string ClassifierId { get; set; }
         public string Name { get; set; }

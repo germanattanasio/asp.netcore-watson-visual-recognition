@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace VR.Models
+namespace VisualRecognition.Models
 {
-    public class WatsonVRClassifier
+    public class Classifier
     {
         [JsonProperty("classifier_id")]
         public string ClassifierId { get; set; }

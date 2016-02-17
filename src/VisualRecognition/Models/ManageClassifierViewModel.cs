@@ -2,11 +2,11 @@
 using Microsoft.AspNet.Mvc.Rendering;
 using System.Collections.Generic;
 
-namespace VR.Models
+namespace VisualRecognition.Models
 {
-    public class WatsonVRManageClassifierViewModel
+    public class ManageClassifierViewModel
     {
-        public WatsonVRClassifierAction ActionType { get; set; }
+        public ClassifierActionType ActionType { get; set; }
         public string ClassifierId { get; set; }
         public IEnumerable<SelectListItem> ClassifierIds { get; set; }
         public string ClassifierName { get; set; }
@@ -14,14 +14,14 @@ namespace VR.Models
         public IFormFile PositiveExamples { get; set; }
         public bool Success { get; set; }
 
-        public WatsonVRManageClassifierViewModel()
+        public ManageClassifierViewModel()
         {
-            ActionType = WatsonVRClassifierAction.None;
+            ActionType = ClassifierActionType.None;
             ClassifierIds = new List<SelectListItem>();
         }
     }
 
-    public enum WatsonVRClassifierAction
+    public enum ClassifierActionType
     {
         Create,
         Delete,

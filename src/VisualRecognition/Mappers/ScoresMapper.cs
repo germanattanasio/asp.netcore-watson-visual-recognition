@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using VR.Models;
+using VisualRecognition.Models;
 
-namespace VR.Mappers
+namespace VisualRecognition.Mappers
 {
-    public class WatsonVRScoreMapper
+    public class ScoresMapper
     {
-        public static WatsonVRScoreViewModel Map(WatsonVRScore fromModel)
+        public static ClassificationScoreViewModel Map(ClassificationScore fromModel)
         {
-            WatsonVRScoreViewModel toModel = new WatsonVRScoreViewModel();
+            ClassificationScoreViewModel toModel = new ClassificationScoreViewModel();
             toModel.ClassifierId = fromModel.ClassifierId;
             toModel.ClassifierName = fromModel.ClassifierName;
             toModel.Score = fromModel.Score.ToString("P2");

@@ -1,6 +1,6 @@
-﻿namespace VR.Models
+﻿namespace VisualRecognition.Models
 {
-    public class WatsonVRServiceCredentials
+    public class Credentials
     {
         public string Username { get; set; }
         public string Password { get; set; }

@@ -1,6 +1,6 @@
-﻿namespace VR.Models
+﻿namespace VisualRecognition.Models
 {
-    public class WatsonVRScoreViewModel
+    public class ClassificationScoreViewModel
     {
         public string ClassifierId { get; set; }
         public string ClassifierName { get; set; }

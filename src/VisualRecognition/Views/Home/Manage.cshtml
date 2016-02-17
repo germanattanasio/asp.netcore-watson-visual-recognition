@@ -1,5 +1,5 @@
-﻿@using VR.Models
-@model WatsonVRManageClassifierViewModel
+﻿@using VisualRecognition.Models
+@model ManageClassifierViewModel
 @{
     ViewBag.Title = "ASP.NET Core Watson Visual Recognition Starter Application";
     Layout = "_Layout";
@@ -35,13 +35,13 @@
             @Html.ValidationSummary()
             if (Model.Success && !string.IsNullOrEmpty(Model.ClassifierId))
             {
-                if (Model.ActionType == WatsonVRClassifierAction.Create)
+                if (Model.ActionType == ClassifierActionType.Create)
                 {
                     <div class="well">
                         @Html.ActionLink("Try out your new classifier", "Index", "Home", new { classifierId = Model.ClassifierId })
                     </div>
                 }
-                else if (Model.ActionType == WatsonVRClassifierAction.Delete)
+                else if (Model.ActionType == ClassifierActionType.Delete)
                 {
                     <div class="well">
                         Classifier deleted successfully.

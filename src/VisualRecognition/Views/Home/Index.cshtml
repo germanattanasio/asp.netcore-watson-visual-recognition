@@ -1,4 +1,4 @@
-﻿@model VR.Models.WatsonVRViewModel
+﻿@model VisualRecognition.Models.VisualRecognitionViewModel
 @{
     ViewBag.Title = "ASP.NET Core Watson Visual Recognition Starter Application";
     Layout = "_Layout";
@@ -88,7 +88,7 @@
                             <hr class="watsonScoreSeparator" />
                             @foreach (var score in image.Scores)
                             {
-                                @Html.Partial("_WatsonVRScoreViewModel", score)
+                                @Html.Partial("_ClassificationScoreViewModel", score)
                             }
                             @if (!image.Scores.Any()) {
                                 <div class="watsonScore">

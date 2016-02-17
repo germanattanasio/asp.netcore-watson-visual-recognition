@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace VR.Services
+namespace VisualRecognition.Services
 {
     public class LoggingHandler : DelegatingHandler
     {

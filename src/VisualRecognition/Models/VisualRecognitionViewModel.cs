@@ -2,21 +2,21 @@
 using Microsoft.AspNet.Mvc.Rendering;
 using System.Collections.Generic;
 
-namespace VR.Models
+namespace VisualRecognition.Models
 {
-    public class WatsonVRViewModel
+    public class VisualRecognitionViewModel
     {
         public string ClassifierId { get; set; }
         public IEnumerable<SelectListItem> ClassifierIds { get; set; }
-        public ICollection<WatsonVRImageViewModel> ImageResults { get; set; }
+        public ICollection<ImageViewModel> ImageResults { get; set; }
         public IFormFile ImageUpload { get; set; }
         public string ImageUrl { get; set; }
         public int MaxScores { get; set; }
 
-        public WatsonVRViewModel()
+        public VisualRecognitionViewModel()
         {
             ClassifierIds = new List<SelectListItem>();
-            ImageResults = new List<WatsonVRImageViewModel>();
+            ImageResults = new List<ImageViewModel>();
         }
     }
 }

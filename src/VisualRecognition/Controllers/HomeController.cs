@@ -6,20 +6,20 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
-using VR.Models;
-using VR.Services;
+using VisualRecognition.Models;
+using VisualRecognition.Services;
 using Microsoft.AspNet.Mvc.Rendering;
 using System.Collections.Generic;
 
-namespace VR.Controllers
+namespace VisualRecognition.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IWatsonVRService _vrService;
+        private readonly IVisualRecognitionService _vrService;
         private readonly IApplicationEnvironment _env;
         private const int DefaultMaxScores = 5;
 
-        public HomeController(IApplicationEnvironment env, IWatsonVRService vrService)
+        public HomeController(IApplicationEnvironment env, IVisualRecognitionService vrService)
         {
             _env = env;
             _vrService = vrService;
@@ -28,7 +28,7 @@ namespace VR.Controllers
 
         public async Task<IActionResult> Index(string classifierId = null, int? maxScores = null)
         {
-            var viewModel = new WatsonVRViewModel();
+            var viewModel = new VisualRecognitionViewModel();
             viewModel.MaxScores = maxScores.HasValue ? maxScores.Value : DefaultMaxScores;
             viewModel.ClassifierIds = await GetClassifierSelectList(classifierId);
             if (!viewModel.ClassifierIds.Any())
@@ -39,11 +39,11 @@ namespace VR.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(WatsonVRViewModel viewModel)
+        public async Task<IActionResult> Index(VisualRecognitionViewModel viewModel)
         {
             if (viewModel == null)
             {
-                viewModel = new WatsonVRViewModel();
+                viewModel = new VisualRecognitionViewModel();
                 ModelState.AddModelError("viewModel", "Form must be filled out completely before submitting");
             }
 
@@ -89,7 +89,7 @@ namespace VR.Controllers
 
         public async Task<IActionResult> Manage()
         {
-            var viewModel = new WatsonVRManageClassifierViewModel();
+            var viewModel = new ManageClassifierViewModel();
             viewModel.ClassifierIds = await GetClassifierSelectList(null);
             if (!viewModel.ClassifierIds.Any())
             {
@@ -99,12 +99,12 @@ namespace VR.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Manage(WatsonVRManageClassifierViewModel viewModel)
+        public async Task<IActionResult> Manage(ManageClassifierViewModel viewModel)
         {
-            if (viewModel == null || viewModel.ActionType == WatsonVRClassifierAction.None)
+            if (viewModel == null || viewModel.ActionType == ClassifierActionType.None)
             {
                 ModelState.AddModelError("viewModel", "Form must be filled out completely before submitting");
-                var returnModel = new WatsonVRManageClassifierViewModel();
+                var returnModel = new ManageClassifierViewModel();
                 returnModel.ClassifierIds = await GetClassifierSelectList(null);
                 if (!returnModel.ClassifierIds.Any())
                 {
@@ -113,7 +113,7 @@ namespace VR.Controllers
                 return View(returnModel);
             }
 
-            if (viewModel.ActionType == WatsonVRClassifierAction.Create)
+            if (viewModel.ActionType == ClassifierActionType.Create)
             {
                 if (viewModel.PositiveExamples == null)
                 {
@@ -147,7 +147,7 @@ namespace VR.Controllers
                     }
                 }
             }
-            else if (viewModel.ActionType == WatsonVRClassifierAction.Delete)
+            else if (viewModel.ActionType == ClassifierActionType.Delete)
             {
                 if (string.IsNullOrEmpty(viewModel.ClassifierId))
                 {
@@ -155,7 +155,7 @@ namespace VR.Controllers
                 }
             }
 
-            if (ModelState.IsValid && viewModel.ActionType == WatsonVRClassifierAction.Create)
+            if (ModelState.IsValid && viewModel.ActionType == ClassifierActionType.Create)
             {
                 var tempPositiveName = GetTempFilename(".zip");
                 viewModel.PositiveExamples.SaveAs(tempPositiveName);
@@ -175,7 +175,7 @@ namespace VR.Controllers
                 System.IO.File.Delete(tempPositiveName);
                 System.IO.File.Delete(tempNegativeName);
             }
-            else if (ModelState.IsValid && viewModel.ActionType == WatsonVRClassifierAction.Delete)
+            else if (ModelState.IsValid && viewModel.ActionType == ClassifierActionType.Delete)
             {
                 viewModel.Success = await _vrService.DeleteClassifierAsync(viewModel.ClassifierId);
             }

@@ -1,13 +1,13 @@
 ﻿using System;
-using VR.Models;
+using VisualRecognition.Models;
 
-namespace VR.Mappers
+namespace VisualRecognition.Mappers
 {
-    public class WatsonVRClassifierMapper
+    public class ClassifierMapper
     {
-        public static WatsonVRClassifierViewModel Map(WatsonVRClassifier fromModel)
+        public static ClassifierViewModel Map(Classifier fromModel)
         {
-            WatsonVRClassifierViewModel toModel = new WatsonVRClassifierViewModel();
+            ClassifierViewModel toModel = new ClassifierViewModel();
             toModel.ClassifierId = fromModel.ClassifierId;
             DateTime createdTime;
             if (DateTime.TryParse(fromModel.CreatedTime, out createdTime))

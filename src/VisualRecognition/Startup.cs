@@ -5,10 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
 using Newtonsoft.Json;
-using VR.Models;
-using VR.Services;
+using VisualRecognition.Models;
+using VisualRecognition.Services;
 
-namespace VR
+namespace VisualRecognition
 {
     public class Startup
     {
@@ -42,8 +42,8 @@ namespace VR
 
             // works with VCAP_SERVICES JSON value added to config.json when running locally,
             // and works with actual VCAP_SERVICES env var based on configuration set above when running in CF
-            services.Configure<WatsonVRServiceCredentials>(Configuration.GetSection("visual_recognition:0:credentials"));
-            services.AddTransient<IWatsonVRService, WatsonVRService>();
+            services.Configure<Credentials>(Configuration.GetSection("visual_recognition:0:credentials"));
+            services.AddTransient<IVisualRecognitionService, VisualRecognitionService>();
         }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)

@@ -8,5 +8,5 @@ bin/
 README.md
 project.lock.json
 Properties/
-src/VR/config.json
+src/VisualRecognition/config.json
 temp_files/
