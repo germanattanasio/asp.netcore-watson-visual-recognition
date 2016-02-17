@@ -3,9 +3,7 @@
     label: visual_recognition
     plan: free
 applications:
-- name: sample-aspnetcore-visualrecognition
-  random-route: true
+- name: visual-recognition-demo-aspnetcore
   memory: 256M
   services:
   - visual-recognition-service
-buildpack: aspnet5-experimental
