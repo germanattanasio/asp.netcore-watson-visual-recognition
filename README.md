@@ -114,11 +114,11 @@ For more detailed information on troubleshooting your application, see the [Trou
   Find more open source projects on the [IBM Github Page](http://ibm.github.io/)
 
 ### Useful links
-[IBM Bluemix](https://bluemix.net/)
-[IBM Bluemix Documentation](https://www.ng.bluemix.net/docs/)
-[IBM Bluemix Developers Community](http://developer.ibm.com/bluemix)
-[IBM Watson Visual Recognition Overview](https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/visual-recognition/overview.shtml)
-[IBM Watson Visual Recognition API Reference](https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition/api/v2/)
+[IBM Bluemix](https://bluemix.net/)  
+[IBM Bluemix Documentation](https://www.ng.bluemix.net/docs/)  
+[IBM Bluemix Developers Community](http://developer.ibm.com/bluemix)  
+[IBM Watson Visual Recognition Overview](https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/visual-recognition/overview.shtml)  
+[IBM Watson Visual Recognition API Reference](https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition/api/v2/)  
 
 [cloud_foundry]: https://github.com/cloudfoundry/cli
 [service_url]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition.html
