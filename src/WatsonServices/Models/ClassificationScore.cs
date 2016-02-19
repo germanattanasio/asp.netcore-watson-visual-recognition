@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace VisualRecognition.Models
+namespace WatsonServices.Models
 {
     public class ClassificationScore
     {

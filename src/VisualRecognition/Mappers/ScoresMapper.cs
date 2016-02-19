@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using VisualRecognition.Models;
+﻿using VisualRecognition.ViewModels;
+using WatsonServices.Models;
 
 namespace VisualRecognition.Mappers
 {

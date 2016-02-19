@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "VisualRecognition", "src\VisualRecognition\VisualRecognition.xproj", "{BE98A5AA-A9A3-4524-AFC2-5AEC7608A8D8}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WatsonServices", "src\WatsonServices\WatsonServices.xproj", "{95C30E49-B849-43D7-974B-FFB70A41F573}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,11 +27,16 @@ Global
 		{BE98A5AA-A9A3-4524-AFC2-5AEC7608A8D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE98A5AA-A9A3-4524-AFC2-5AEC7608A8D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE98A5AA-A9A3-4524-AFC2-5AEC7608A8D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95C30E49-B849-43D7-974B-FFB70A41F573}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95C30E49-B849-43D7-974B-FFB70A41F573}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95C30E49-B849-43D7-974B-FFB70A41F573}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95C30E49-B849-43D7-974B-FFB70A41F573}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BE98A5AA-A9A3-4524-AFC2-5AEC7608A8D8} = {0E272D8C-1744-45A9-8606-8E194A0D3D33}
+		{95C30E49-B849-43D7-974B-FFB70A41F573} = {0E272D8C-1744-45A9-8606-8E194A0D3D33}
 	EndGlobalSection
 EndGlobal

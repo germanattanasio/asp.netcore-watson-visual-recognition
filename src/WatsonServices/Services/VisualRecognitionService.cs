@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.OptionsModel;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -8,14 +7,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using VisualRecognition.Mappers;
-using VisualRecognition.Models;
+using WatsonServices.Models;
 
-namespace VisualRecognition.Services
+namespace WatsonServices.Services
 {
     public class VisualRecognitionService : IVisualRecognitionService
     {
-        private readonly HashSet<string> _acceptedImageTypes;
         private bool learningOptOut;
         private readonly Credentials _vrCreds;
 
@@ -53,15 +50,6 @@ namespace VisualRecognition.Services
             {
                 throw new Exception("Missing Watson VR service credentials");
             }
-
-            // set accepted image types, the Watson service officially supports jpg, jpeg, and png
-            // other image types could be converted to one of these formats before sending to Watson
-            _acceptedImageTypes = new HashSet<string>()
-            {
-                ".jpg",
-                ".jpeg",
-                ".png"
-            };
         }
 
         /// <summary>
@@ -71,66 +59,38 @@ namespace VisualRecognition.Services
         /// <param name="maxScores">(Optional) Maximum number of classifier scores to list for each image</param>
         /// <param name="classifierIds">(Optional) Array of classifier Ids to use when classifying the image</param>
         /// <returns>A collection of images and their corresponding classifier scores</returns>
-        public async Task<VisualRecognitionViewModel> ClassifyAsync(string filePath, int? maxScores = null, params string[] classifierIds)
+        public async Task<ClassifyResponse> ClassifyAsync(string filePath, params string[] classifierIds)
         {
-            VisualRecognitionViewModel viewModel = new VisualRecognitionViewModel();
+            // read the file into a byte buffer and call ClassifyAsync overload with the byte buffer
+            return await ClassifyAsync(Path.GetFileName(filePath), File.ReadAllBytes(filePath), classifierIds);
+        }
+
+        /// <summary>
+        /// Classifies an image based on a given set of classifiers, or all classifiers if no classifiers are specified.
+        /// </summary>
+        /// <param name="filePath">Path to the image or zip file of images to be classified</param>
+        /// <param name="maxScores">(Optional) Maximum number of classifier scores to list for each image</param>
+        /// <param name="classifierIds">(Optional) Array of classifier Ids to use when classifying the image</param>
+        /// <returns>A collection of images and their corresponding classifier scores</returns>
+        public async Task<ClassifyResponse> ClassifyAsync(string filename, byte[] fileContents, params string[] classifierIds)
+        {
+            ClassifyResponse model = new ClassifyResponse();
 
             // Create an HttpClient to make the request using VrClient()
             using (var client = VrClient())
             {
                 try
                 {
-                    // read the file into a byte buffer
-                    byte[] buffer = File.ReadAllBytes(filePath);
-
                     // create a new MultipartFormDataContent to store the form data to be sent
                     var request = new MultipartFormDataContent();
 
                     // create a ByteArrayContent from the image file buffer and set its content type
-                    var imageContent = new ByteArrayContent(buffer);
+                    var imageContent = new ByteArrayContent(fileContents);
                     imageContent.Headers.ContentType =
                         MediaTypeHeaderValue.Parse("multipart/form-data");
 
-                    // get the filename of the image file, without the path
-                    var filename = Path.GetFileName(filePath);
-
-                    // create a dictionary to store the original filenames and the base64 encoded image files (for displaying images)
-                    var base64Images = new Dictionary<string, string>();
-                    Task extractImages = null;
-
-                    // if the file is not a zip file, add the filename and it's base64 encoded form to base64Images
-                    if (Path.GetExtension(filePath).ToLowerInvariant() != ".zip")
-                    {
-                        base64Images.Add(filename, Convert.ToBase64String(File.ReadAllBytes(filePath)));
-                    }
-                    else
-                    {
-                        // create and run a new task to extract the files from the zip file in the background
-                        extractImages = new TaskFactory().StartNew(() =>
-                        {
-                            var fileName = Path.GetFileNameWithoutExtension(filePath);
-                            var folder = Path.GetDirectoryName(filePath);
-                            var newTempFolder = Path.Combine(folder, fileName);
-                            System.IO.Compression.ZipFile.ExtractToDirectory(filePath, newTempFolder);
-
-                            // add each of the extracted images to the base64Images dictionary
-                            foreach (var file in Directory.GetFiles(newTempFolder)
-                                .Where(m => _acceptedImageTypes.Contains(Path.GetExtension(m).ToLowerInvariant())).ToList())
-                            {
-                                base64Images.Add(Path.GetFileName(file), Convert.ToBase64String(File.ReadAllBytes(file)));
-                            }
-
-                            // cleanup the extracted files as they are no longer needed
-                            foreach (var file in Directory.GetFiles(newTempFolder))
-                            {
-                                File.Delete(file);
-                            }
-                            Directory.Delete(newTempFolder);
-                        });
-                    }
-
                     // if classifierIds was not omitted, serialize the array and add it to the request
-                    if (classifierIds != null)
+                    if (classifierIds != null && classifierIds.Any() && classifierIds[0] != null)
                     {
                         var serializedClassifiers = "{\"classifier_ids\":" + 
                             Newtonsoft.Json.JsonConvert.SerializeObject(classifierIds) + "}";
@@ -146,15 +106,7 @@ namespace VisualRecognition.Services
                     // if the request succeeded, read the json result as a Response object and map it to the view model
                     if (response.IsSuccessStatusCode)
                     {
-                        var model = await response.Content.ReadAsAsync<Response>();
-                        if (extractImages != null)
-                        {
-                            // wait for the image extraction to finish if the uploaded file was a zip file
-                            Task.WaitAll(extractImages);
-                        }
-
-                        // use the ImagesMapper to map the response from Watson to the base64 images and original filenames
-                        ImagesMapper.Map(model, viewModel, base64Images, maxScores);
+                        model = await response.Content.ReadAsAsync<ClassifyResponse>();
                     }
                 }
                 catch (Exception ex)
@@ -162,7 +114,7 @@ namespace VisualRecognition.Services
                     Console.WriteLine(ex.StackTrace);
                 }
             }
-            return viewModel;
+            return model;
         }
 
         /// <summary>
@@ -171,11 +123,11 @@ namespace VisualRecognition.Services
         /// <param name="positiveExamplesZipFile">Path to a zip file containing positive examples</param>
         /// <param name="negativeExamplesZipFile">Path to a zip file containing negative examples</param>
         /// <param name="classifierName">Name of the new classifier</param>
-        /// <returns>A <c>ClassifierViewModel</c> representing the newly created classifier, or null if it could not be created</returns>
-        public async Task<ClassifierViewModel> CreateClassifierAsync(string positiveExamplesZipFile,
+        /// <returns>A <c>Classifier</c> representing the newly created classifier, or null if it could not be created</returns>
+        public async Task<Classifier> CreateClassifierAsync(string positiveExamplesZipFile,
             string negativeExamplesZipFile, string classifierName)
         {
-            ClassifierViewModel viewModel = null;
+            Classifier model = null;
 
             // Create an HttpClient to make the request using VrClient()
             using (var client = VrClient())
@@ -216,8 +168,7 @@ namespace VisualRecognition.Services
                     if (response.IsSuccessStatusCode)
                     {
                         // read the json result as a Classifier, then map it to a ClassifierViewModel
-                        var model = await response.Content.ReadAsAsync<Classifier>();
-                        viewModel = ClassifierMapper.Map(model);
+                        model = await response.Content.ReadAsAsync<Classifier>();
                     }
                 }
                 catch (Exception ex)
@@ -225,7 +176,7 @@ namespace VisualRecognition.Services
                     Console.WriteLine(ex.StackTrace);
                 }
             }
-            return viewModel;
+            return model;
         }
 
         /// <summary>
@@ -273,10 +224,10 @@ namespace VisualRecognition.Services
         /// Retrieves a specific classifier's information from the Watson service including name, id, owner, and created time
         /// </summary>
         /// <param name="classifierId">The Id string of the classifier to be retrieved</param>
-        /// <returns>A <c>ClassifierViewModel</c> representing the classifier, or null if the classifier was not found</returns>
-        public async Task<ClassifierViewModel> GetClassifierAsync(string classifierId)
+        /// <returns>A <c>Classifier</c> representing the classifier, or null if the classifier was not found</returns>
+        public async Task<Classifier> GetClassifierAsync(string classifierId)
         {
-            ClassifierViewModel viewModel = null;
+            Classifier model = null;
 
             // Create an HttpClient to make the request using VrClient()
             using (var client = VrClient())
@@ -290,8 +241,7 @@ namespace VisualRecognition.Services
                     if (response.IsSuccessStatusCode)
                     {
                         // read the json result as a Classifier model, then map it to a ClassifierViewModel
-                        var model = await response.Content.ReadAsAsync<Classifier>();
-                        viewModel = ClassifierMapper.Map(model);
+                        model = await response.Content.ReadAsAsync<Classifier>();
                     }
                 }
                 catch (Exception ex)
@@ -299,7 +249,7 @@ namespace VisualRecognition.Services
                     Console.WriteLine(ex.StackTrace);
                 }
             }
-            return viewModel;
+            return model;
         }
 
         /// <summary>

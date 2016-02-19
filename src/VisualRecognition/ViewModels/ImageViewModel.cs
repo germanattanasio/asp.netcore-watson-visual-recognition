@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VisualRecognition.Models
+namespace VisualRecognition.ViewModels
 {
     public class ImageViewModel
     {

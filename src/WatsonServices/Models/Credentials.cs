@@ -1,4 +1,4 @@
-﻿namespace VisualRecognition.Models
+﻿namespace WatsonServices.Models
 {
     public class Credentials
     {

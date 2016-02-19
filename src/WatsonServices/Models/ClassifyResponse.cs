@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
 
-namespace VisualRecognition.Models
+namespace WatsonServices.Models
 {
-    public class Response
+    public class ClassifyResponse
     {
         [JsonProperty("images")]
         public Image[] Images { get; set; }
 
-        public Response()
+        public ClassifyResponse()
         {
             Images = new Image[0];
         }

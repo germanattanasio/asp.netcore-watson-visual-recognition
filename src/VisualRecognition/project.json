@@ -5,16 +5,10 @@
     "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
     "Microsoft.AspNet.Server.Kestrel": "1.0.0-rc1-final",
     "Microsoft.AspNet.StaticFiles": "1.0.0-rc1-final",
-    "Microsoft.AspNet.WebApi.Client": "5.2.3",
     "Microsoft.Extensions.Configuration": "1.0.0-rc1-final",
     "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
-    "Newtonsoft.Json": "8.0.2",
     "System.IO.Compression.ZipFile": "4.0.0",
-    "System.Linq": "4.0.0",
-    "System.Net.Http": "4.0.0",
-    "System.Runtime.Serialization.Primitives": "4.0.10",
-    "System.Runtime.Serialization.Xml": "4.0.11"
+    "WatsonServices": "1.0.0"
   },
   "commands": {
     "kestrel": "Microsoft.AspNet.Server.Kestrel",

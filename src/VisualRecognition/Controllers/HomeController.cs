@@ -6,23 +6,29 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
-using VisualRecognition.Models;
-using VisualRecognition.Services;
 using Microsoft.AspNet.Mvc.Rendering;
 using System.Collections.Generic;
+using VisualRecognition.Mappers;
+using VisualRecognition.Services;
+using VisualRecognition.ViewModels;
+using WatsonServices.Services;
 
 namespace VisualRecognition.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IVisualRecognitionService _vrService;
+        private readonly IFileEncoderService _encService;
         private readonly IApplicationEnvironment _env;
         private const int DefaultMaxScores = 5;
 
-        public HomeController(IApplicationEnvironment env, IVisualRecognitionService vrService)
+        public HomeController(IApplicationEnvironment env, IVisualRecognitionService vrService,
+            IFileEncoderService encService)
         {
             _env = env;
+            _encService = encService;
             _vrService = vrService;
+
             _vrService.ShareData = true; // set to false, or comment this line to opt out of sharing data with Watson
         }
 
@@ -65,13 +71,24 @@ namespace VisualRecognition.Controllers
             {
                 var filePath = GetTempFilename(fileExt);
                 await viewModel.ImageUpload.SaveAsAsync(filePath);
-                var results = (await _vrService.ClassifyAsync(filePath, viewModel.MaxScores,
-                    viewModel.ClassifierId != null ? new string[] { viewModel.ClassifierId } : null));
-                if (results != null)
+
+                Dictionary<string, string> base64Images = null;
+
+                // create and run a new task to encode the image file(s) in the background
+                Task encodeImages = new TaskFactory().StartNew(async () =>
                 {
-                    viewModel.ImageResults = results.ImageResults;
-                }
-                else
+                    base64Images = await _encService.EncodeZipFileAsync(filePath);
+                });
+
+                var results = (await _vrService.ClassifyAsync(filePath, viewModel.ClassifierId));
+
+                // wait for the image encoding to finish if it is not done yet
+                Task.WaitAll(encodeImages);
+
+                // use the ImagesMapper to map the response from Watson to the base64 images and original filenames
+                ImagesMapper.Map(results, viewModel, base64Images, viewModel.MaxScores);
+
+                if (viewModel.ImageResults == null || !viewModel.ImageResults.Any())
                 {
                     ModelState.AddModelError("Imageresults", "Failed to retrieve results from Watson service");
                 }
@@ -162,7 +179,10 @@ namespace VisualRecognition.Controllers
                 var tempNegativeName = GetTempFilename(".zip");
                 viewModel.NegativeExamples.SaveAs(tempNegativeName);
 
-                var classifierVm = await _vrService.CreateClassifierAsync(tempPositiveName, tempNegativeName, viewModel.ClassifierName);
+                // call the VisualRecognition service to create the classifier and then map that to a view model
+                var classifierVm = ClassifierMapper.Map(
+                    await _vrService.CreateClassifierAsync(tempPositiveName, tempNegativeName, viewModel.ClassifierName));
+
                 viewModel.ClassifierId = classifierVm != null ? classifierVm.ClassifierId : "";
                 viewModel.Success = !string.IsNullOrEmpty(viewModel.ClassifierId);
 

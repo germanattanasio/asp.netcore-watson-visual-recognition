@@ -1,4 +1,4 @@
-﻿namespace VisualRecognition.Models
+﻿namespace VisualRecognition.ViewModels
 {
     public class ClassificationScoreViewModel
     {

@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using VisualRecognition.Models;
+using VisualRecognition.ViewModels;
+using WatsonServices.Models;
 
 namespace VisualRecognition.Mappers
 {
     public class ImagesMapper
     {
-        public static void Map(Response fromModel, VisualRecognitionViewModel toModel, Dictionary<string,string> base64Images,
+        public static void Map(ClassifyResponse fromModel, VisualRecognitionViewModel toModel, Dictionary<string,string> base64Images,
             int? maxScores)
         {
             if (toModel == null)

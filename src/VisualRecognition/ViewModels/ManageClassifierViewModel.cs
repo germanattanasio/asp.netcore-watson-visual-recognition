@@ -2,7 +2,7 @@
 using Microsoft.AspNet.Mvc.Rendering;
 using System.Collections.Generic;
 
-namespace VisualRecognition.Models
+namespace VisualRecognition.ViewModels
 {
     public class ManageClassifierViewModel
     {

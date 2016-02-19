@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace VisualRecognition.Services
+namespace WatsonServices.Services
 {
     public class LoggingHandler : DelegatingHandler
     {

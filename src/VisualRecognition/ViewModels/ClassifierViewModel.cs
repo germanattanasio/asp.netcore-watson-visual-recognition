@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VisualRecognition.Models
+namespace VisualRecognition.ViewModels
 {
     public class ClassifierViewModel
     {
