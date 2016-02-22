@@ -91,7 +91,8 @@ This sample app targets the ASP.Net Core (formerly ASP.Net 5) and the .Net CoreC
 ## Decomposition Instructions
 
 * See src/VisualRecognition/Startup.cs for how to obtain the Watson Visual Recognition credentials
-* See src/VisualRecognition/Services/VisualRecognitionService.cs for how to use the Watson Visual Recognition credentials and call the Watson Visual Recognition REST API
+* See src/WatsonServices/Services/VisualRecognitionService.cs for how to use the Watson Visual Recognition credentials and call the Watson Visual Recognition REST API
+* To use the VisualRecognitionService in your own project, simply import the WatsonServices project into your solution and add a dependency for it to your project.json.
 
 ## Troubleshooting
 
