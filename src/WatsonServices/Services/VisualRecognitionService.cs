@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.OptionsModel;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -33,19 +32,10 @@ namespace WatsonServices.Services
             }
         }
 
-        public VisualRecognitionService(IOptions<Credentials> optionsAccessor)
+        public VisualRecognitionService(WatsonServices.Models.Credentials credentials)
         {
-            // retrieve Watson service credentials from Configuration (set in Startup.cs)
-            var creds = optionsAccessor.Value;
-            if (creds != null)
-            {
-                _vrCreds = new Credentials
-                {
-                    Password = creds.Password,
-                    Url = creds.Url,
-                    Username = creds.Username
-                };
-            }
+            _vrCreds = credentials;
+
             if (_vrCreds == null || _vrCreds.Username == null || _vrCreds.Password == null || _vrCreds.Url == null)
             {
                 throw new Exception("Missing Watson VR service credentials");

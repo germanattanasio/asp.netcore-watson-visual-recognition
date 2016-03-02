@@ -27,12 +27,12 @@ namespace VisualRecognition
                 dynamic json = JsonConvert.DeserializeObject(vcapServices);
                 if (json.visual_recognition != null)
                 {
+                    string password = json.visual_recognition[0].credentials.password;
                     string url = json.visual_recognition[0].credentials.url;
                     string username = json.visual_recognition[0].credentials.username;
-                    string password = json.visual_recognition[0].credentials.password;
-                    Configuration["visual_recognition:0:credentials:username"] = username;
                     Configuration["visual_recognition:0:credentials:password"] = password;
                     Configuration["visual_recognition:0:credentials:url"] = url;
+                    Configuration["visual_recognition:0:credentials:username"] = username;
                 }
             }
         }
@@ -43,8 +43,14 @@ namespace VisualRecognition
 
             // works with VCAP_SERVICES JSON value added to config.json when running locally,
             // and works with actual VCAP_SERVICES env var based on configuration set above when running in CF
-            services.Configure<Credentials>(Configuration.GetSection("visual_recognition:0:credentials"));
             services.AddTransient<IFileEncoderService, Base64FileEncoderService>();
+            WatsonServices.Models.Credentials creds = new Credentials()
+            {
+                Password = Configuration["visual_recognition:0:credentials:password"],
+                Url = Configuration["visual_recognition:0:credentials:url"],
+                Username = Configuration["visual_recognition:0:credentials:username"]
+            };
+            services.AddInstance(typeof(WatsonServices.Models.Credentials), creds);
             services.AddTransient<IVisualRecognitionService, VisualRecognitionService>();
         }
 
