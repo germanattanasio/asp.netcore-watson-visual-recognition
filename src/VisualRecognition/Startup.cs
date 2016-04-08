@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
 using Newtonsoft.Json;
 using VisualRecognition.Services;
-using WatsonServices.Models;
 using WatsonServices.Services;
 
 namespace VisualRecognition
@@ -44,13 +43,13 @@ namespace VisualRecognition
             // works with VCAP_SERVICES JSON value added to config.json when running locally,
             // and works with actual VCAP_SERVICES env var based on configuration set above when running in CF
             services.AddTransient<IFileEncoderService, Base64FileEncoderService>();
-            WatsonServices.Models.Credentials creds = new Credentials()
+            WatsonServices.Models.VisualRecognition.Credentials creds = new WatsonServices.Models.VisualRecognition.Credentials()
             {
                 Password = Configuration["visual_recognition:0:credentials:password"],
                 Url = Configuration["visual_recognition:0:credentials:url"],
                 Username = Configuration["visual_recognition:0:credentials:username"]
             };
-            services.AddInstance(typeof(WatsonServices.Models.Credentials), creds);
+            services.AddInstance(typeof(WatsonServices.Models.VisualRecognition.Credentials), creds);
             services.AddTransient<IVisualRecognitionService, VisualRecognitionService>();
         }
 

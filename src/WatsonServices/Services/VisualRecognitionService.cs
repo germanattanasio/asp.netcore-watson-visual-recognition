@@ -6,10 +6,22 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using WatsonServices.Models;
+using WatsonServices.Models.VisualRecognition;
 
 namespace WatsonServices.Services
 {
+    public interface IVisualRecognitionService
+    {
+        bool ShareData { get; set; }
+
+        Task<ClassifyResponse> ClassifyAsync(string filePath, params string[] classifierIds);
+        Task<Classifier> CreateClassifierAsync(string positiveExamplesPath, string negativeExamplesPath, string classifierName);
+        Task<bool> DeleteClassifierAsync(string classifierId);
+        Task<bool> DeleteClassifierAsync(Classifier classifier);
+        Task<Classifier> GetClassifierAsync(string classifierId);
+        Task<ClassifiersResponse> GetClassifiersAsync();
+    }
+
     public class VisualRecognitionService : IVisualRecognitionService
     {
         private bool learningOptOut;
@@ -32,7 +44,7 @@ namespace WatsonServices.Services
             }
         }
 
-        public VisualRecognitionService(WatsonServices.Models.Credentials credentials)
+        public VisualRecognitionService(Credentials credentials)
         {
             _vrCreds = credentials;
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using VisualRecognition.ViewModels;
-using WatsonServices.Models;
+using WatsonServices.Models.VisualRecognition;
 
 namespace VisualRecognition.Mappers
 {
