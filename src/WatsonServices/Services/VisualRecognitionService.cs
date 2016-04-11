@@ -10,10 +10,8 @@ using WatsonServices.Models.VisualRecognition;
 
 namespace WatsonServices.Services
 {
-    public interface IVisualRecognitionService
+    public interface IVisualRecognitionService : IWatsonLearningService
     {
-        bool ShareData { get; set; }
-
         Task<ClassifyResponse> ClassifyAsync(string filePath, params string[] classifierIds);
         Task<Classifier> CreateClassifierAsync(string positiveExamplesPath, string negativeExamplesPath, string classifierName);
         Task<bool> DeleteClassifierAsync(string classifierId);
@@ -22,36 +20,21 @@ namespace WatsonServices.Services
         Task<ClassifiersResponse> GetClassifiersAsync();
     }
 
-    public class VisualRecognitionService : IVisualRecognitionService
+    public class VisualRecognitionService : WatsonLearningService, IVisualRecognitionService
     {
-        private bool learningOptOut;
         private readonly Credentials _vrCreds;
 
         // specifies which version of the Watson API to use
         private const string VersionReleaseDate = "2015-12-02";
 
-        // Specifies whether or not to share data with Watson for learning purposes
-        public bool ShareData
-        {
-            get
-            {
-                return !learningOptOut;
-            }
-            set
-            {
-                // if ShareData is set true, don't opt out of sharing
-                learningOptOut = !value;
-            }
-        }
-
         public VisualRecognitionService(Credentials credentials)
         {
-            _vrCreds = credentials;
-
-            if (_vrCreds == null || _vrCreds.Username == null || _vrCreds.Password == null || _vrCreds.Url == null)
+            if (credentials == null || !credentials.IsValid)
             {
-                throw new Exception("Missing Watson VR service credentials");
+                throw new Exception("Missing Watson Visual Recognition service credentials");
             }
+
+            _vrCreds = credentials;
         }
 
         /// <summary>
@@ -105,7 +88,7 @@ namespace WatsonServices.Services
                     // send a POST request to the Watson service with the form data from request
                     var response = await client.PostAsync("api/v2/classify?version=" + VersionReleaseDate, request);
 
-                    // if the request succeeded, read the json result as a Response object and map it to the view model
+                    // if the request succeeded, read the json result as a Response object
                     if (response.IsSuccessStatusCode)
                     {
                         model = await response.Content.ReadAsAsync<ClassifyResponse>();
@@ -169,7 +152,7 @@ namespace WatsonServices.Services
                     // see https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition/api/v2/#create_a_classifier
                     if (response.IsSuccessStatusCode)
                     {
-                        // read the json result as a Classifier, then map it to a ClassifierViewModel
+                        // read the json result as a Classifier
                         model = await response.Content.ReadAsAsync<Classifier>();
                     }
                 }
@@ -242,7 +225,7 @@ namespace WatsonServices.Services
                     // If the Watson service found a classifier with the specified Id, the HTTP status code will be 200
                     if (response.IsSuccessStatusCode)
                     {
-                        // read the json result as a Classifier model, then map it to a ClassifierViewModel
+                        // read the json result as a Classifier model
                         model = await response.Content.ReadAsAsync<Classifier>();
                     }
                 }
@@ -312,7 +295,7 @@ namespace WatsonServices.Services
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", auth);
 
-            // In order to opt out of sharing data with watson, the X-Watson-Learning-Opt-Out header must be set to true
+            // In order to opt out of sharing data with Watson, the X-Watson-Learning-Opt-Out header must be set to true
             // See https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition/api/v2/#data-collection
             if (learningOptOut)
             {
