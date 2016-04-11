@@ -2,8 +2,12 @@
   visual-recognition-service:
     label: visual_recognition
     plan: free
+  alchemy-api:
+    label: alchemy_api
+    plan: free
 applications:
 - name: visual-recognition-demo-aspnetcore
   memory: 256M
   services:
   - visual-recognition-service
+  - alchemy-api

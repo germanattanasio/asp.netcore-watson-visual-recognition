@@ -12,7 +12,7 @@ using WatsonServices.Models.AlchemyVision;
 
 namespace WatsonServices.Services
 {
-    public interface IAlchemyVisionService : IWatsonLearningService
+    public interface IAlchemyVisionService : IWatsonLearningService, IWatsonFileService
     {
         Task<ImageKeywordResponse> GetImageKeywordsAsync(string url, double forceShowAllParameter, bool knowledgeGraph);
         Task<ImageKeywordResponse> GetImageKeywordsAsync(byte[] fileContents, bool knowledgeGraph, string url = "");
@@ -461,6 +461,21 @@ namespace WatsonServices.Services
             }
 
             return client;
+        }
+
+        bool IWatsonFileService.SupportsFileExtension(string fileExt)
+        {
+            var lowerFileExt = fileExt.ToLowerInvariant();
+            switch (lowerFileExt)
+            {
+                case ".gif":
+                case ".jpg":
+                case ".jpeg":
+                case ".png":
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }

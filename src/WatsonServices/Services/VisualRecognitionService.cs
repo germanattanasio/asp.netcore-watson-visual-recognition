@@ -10,7 +10,7 @@ using WatsonServices.Models.VisualRecognition;
 
 namespace WatsonServices.Services
 {
-    public interface IVisualRecognitionService : IWatsonLearningService
+    public interface IVisualRecognitionService : IWatsonLearningService, IWatsonFileService
     {
         Task<ClassifyResponse> ClassifyAsync(string filePath, params string[] classifierIds);
         Task<Classifier> CreateClassifierAsync(string positiveExamplesPath, string negativeExamplesPath, string classifierName);
@@ -303,6 +303,21 @@ namespace WatsonServices.Services
             }
 
             return client;
+        }
+
+        bool IWatsonFileService.SupportsFileExtension(string fileExt)
+        {
+            var lowerFileExt = fileExt.ToLowerInvariant();
+            switch (lowerFileExt)
+            {
+                case ".jpg":
+                case ".jpeg":
+                case ".zip":
+                case ".png":
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }

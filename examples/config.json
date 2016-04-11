@@ -1,7 +1,7 @@
 {
   "visual_recognition": [
     {
-      "name": "Visual Recognition-9d",
+      "name": "visual-recognition-service",
       "label": "visual_recognition",
       "plan": "free",
       "credentials": {
@@ -13,7 +13,7 @@
   ],
   "alchemy_api": [
     {
-      "name": "AlchemyAPI-dr",
+      "name": "alchemy-api",
       "label": "alchemy_api",
       "plan": "free",
       "credentials": {

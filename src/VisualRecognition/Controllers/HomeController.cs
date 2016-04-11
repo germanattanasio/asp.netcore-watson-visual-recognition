@@ -17,19 +17,23 @@ namespace VisualRecognition.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IVisualRecognitionService _vrService;
+        private readonly IAlchemyVisionService _alchemyVisionService;
+        private readonly IVisualRecognitionService _visualRecognitionService;
         private readonly IFileEncoderService _encService;
         private readonly IApplicationEnvironment _env;
         private const int DefaultMaxScores = 5;
 
-        public HomeController(IApplicationEnvironment env, IVisualRecognitionService vrService,
-            IFileEncoderService encService)
+        public HomeController(IApplicationEnvironment env, IVisualRecognitionService visualRecognitionService,
+            IAlchemyVisionService alchemyVisionService, IFileEncoderService encService)
         {
+            _alchemyVisionService = alchemyVisionService;
             _env = env;
             _encService = encService;
-            _vrService = vrService;
+            _visualRecognitionService = visualRecognitionService;
 
-            _vrService.ShareData = true; // set to false, or comment this line to opt out of sharing data with Watson
+            // set to false, or comment these lines to opt out of sharing data with Watson
+            _alchemyVisionService.ShareData = true;
+            _visualRecognitionService.ShareData = true;
         }
 
         public async Task<IActionResult> Index(string classifierId = null, int? maxScores = null)
@@ -47,6 +51,10 @@ namespace VisualRecognition.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(VisualRecognitionViewModel viewModel)
         {
+            // select which service will be used to handle this request
+            // if ClassifierId is null, use AlchemyVision, otherwise use Visual Recognition
+            var service = (viewModel.ClassifierId == null) ? (IWatsonFileService)_alchemyVisionService : (IWatsonFileService)_visualRecognitionService;
+
             if (viewModel == null)
             {
                 viewModel = new VisualRecognitionViewModel();
@@ -62,9 +70,9 @@ namespace VisualRecognition.Controllers
                 fileExt = Path.GetExtension(fileName).ToLowerInvariant();
             }
 
-            if (fileExt != ".jpg" && fileExt != ".jpeg" && fileExt != ".zip" && fileExt != ".png")
+            if (!service.SupportsFileExtension(fileExt))
             {
-                ModelState.AddModelError("ImageUpload", "Must specify a jpeg, png, or zip file");
+                ModelState.AddModelError("ImageUpload", "Must specify a gif, jpeg, png, or zip file");
             }
 
             if (ModelState.IsValid)
@@ -80,17 +88,30 @@ namespace VisualRecognition.Controllers
                     base64Images = await _encService.EncodeZipFileAsync(filePath);
                 });
 
-                var results = (await _vrService.ClassifyAsync(filePath, viewModel.ClassifierId));
+                if (service.GetType() == _visualRecognitionService.GetType())
+                {
+                    // use VisualRecognition service
+                    var results = (await _visualRecognitionService.ClassifyAsync(filePath, viewModel.ClassifierId));
+                    // wait for the image encoding to finish if it is not done yet
+                    Task.WaitAll(encodeImages);
 
-                // wait for the image encoding to finish if it is not done yet
-                Task.WaitAll(encodeImages);
+                    // use the ImagesMapper to map the response from Watson to the base64 images and original filenames
+                    ImagesMapper.Map(results, viewModel, base64Images, viewModel.MaxScores);
+                }
+                else
+                {
+                    // use AlchemyVision service
+                    var results = (await _alchemyVisionService.GetImageKeywordsAsync(filePath, false));
+                    // wait for the image encoding to finish if it is not done yet
+                    Task.WaitAll(encodeImages);
 
-                // use the ImagesMapper to map the response from Watson to the base64 images and original filenames
-                ImagesMapper.Map(results, viewModel, base64Images, viewModel.MaxScores);
+                    // use the ImagesMapper to map the response from Watson to the base64 images and original filenames
+                    ImagesMapper.Map(results, viewModel, fileName, Path.GetFileName(filePath), base64Images, viewModel.MaxScores);
+                }
 
                 if (viewModel.ImageResults == null || !viewModel.ImageResults.Any())
                 {
-                    ModelState.AddModelError("Imageresults", "Failed to retrieve results from Watson service");
+                    ModelState.AddModelError("ImageResults", "Failed to retrieve results from Watson service");
                 }
                 System.IO.File.Delete(filePath);
             }
@@ -181,7 +202,7 @@ namespace VisualRecognition.Controllers
 
                 // call the VisualRecognition service to create the classifier and then map that to a view model
                 var classifierVm = ClassifierMapper.Map(
-                    await _vrService.CreateClassifierAsync(tempPositiveName, tempNegativeName, viewModel.ClassifierName));
+                    await _visualRecognitionService.CreateClassifierAsync(tempPositiveName, tempNegativeName, viewModel.ClassifierName));
 
                 viewModel.ClassifierId = classifierVm != null ? classifierVm.ClassifierId : "";
                 viewModel.Success = !string.IsNullOrEmpty(viewModel.ClassifierId);
@@ -197,7 +218,7 @@ namespace VisualRecognition.Controllers
             }
             else if (ModelState.IsValid && viewModel.ActionType == ClassifierActionType.Delete)
             {
-                viewModel.Success = await _vrService.DeleteClassifierAsync(viewModel.ClassifierId);
+                viewModel.Success = await _visualRecognitionService.DeleteClassifierAsync(viewModel.ClassifierId);
             }
 
             viewModel.ClassifierIds = await GetClassifierSelectList(null);
@@ -211,7 +232,7 @@ namespace VisualRecognition.Controllers
 
         private async Task<IEnumerable<SelectListItem>> GetClassifierSelectList(string selectedClassifierId)
         {
-            var classifiers = await _vrService.GetClassifiersAsync();
+            var classifiers = await _visualRecognitionService.GetClassifiersAsync();
             if (classifiers != null) {
                 return classifiers.Classifiers
                     .Select(m =>
