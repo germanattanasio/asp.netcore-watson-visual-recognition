@@ -17,6 +17,11 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "VisualRecognition", "src\Vi
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WatsonServices", "src\WatsonServices\WatsonServices.xproj", "{95C30E49-B849-43D7-974B-FFB70A41F573}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{F291494D-054F-4863-A487-B9DB9FA47CA7}"
+	ProjectSection(SolutionItems) = preProject
+		examples\config.json = examples\config.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,5 +43,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BE98A5AA-A9A3-4524-AFC2-5AEC7608A8D8} = {0E272D8C-1744-45A9-8606-8E194A0D3D33}
 		{95C30E49-B849-43D7-974B-FFB70A41F573} = {0E272D8C-1744-45A9-8606-8E194A0D3D33}
+		{F291494D-054F-4863-A487-B9DB9FA47CA7} = {4BC7B1A0-5D01-4358-8637-9FC177C31E6A}
 	EndGlobalSection
 EndGlobal

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using VisualRecognition.ViewModels;
-using WatsonServices.Models;
+using WatsonServices.Models.AlchemyVision;
+using WatsonServices.Models.VisualRecognition;
 
 namespace VisualRecognition.Mappers
 {
@@ -26,6 +27,24 @@ namespace VisualRecognition.Mappers
                     Base64Image = base64Images.Where(m => m.Key == image.ImageName).Select(m => m.Value).FirstOrDefault()
                 });
             }
+        }
+
+        internal static void Map(ImageKeywordResponse fromModel, VisualRecognitionViewModel toModel, string imageName, string tempName, Dictionary<string, string> base64Images,
+            int? maxScores)
+        {
+            if (toModel == null)
+            {
+                toModel = new VisualRecognitionViewModel();
+            }
+
+            toModel.ImageResults = new List<ImageViewModel>();
+            toModel.ImageResults.Add(new ImageViewModel()
+            {
+                ImageName = imageName,
+                Scores = !maxScores.HasValue ? fromModel.ImageKeywords.Select(AlchemyScoresMapper.Map).ToList() :
+                    fromModel.ImageKeywords.Select(AlchemyScoresMapper.Map).Take(maxScores.Value).ToList(),
+                Base64Image = base64Images.Where(m=>m.Key == tempName).Select(m=>m.Value).FirstOrDefault()
+            });
         }
     }
 }
