@@ -1,6 +1,6 @@
 # Watson Visual Recognition ASP.NET Core Starter Application
 
-  The IBM Watson [Visual Recognition][service_url] service analyzes the visual content of images to understand the scene without any input text describing
+  The IBM Watson [Visual Recognition][service_url] and [Alchemy Vision][alchemy_vision_url] services analyze the visual content of images to understand them without any input text describing the images.
 
 Give it a try! Click the button below to fork into IBM DevOps Services and deploy your own copy of this application on Bluemix.
 
@@ -41,9 +41,9 @@ applications:
   ```
 
 ## Running the app locally
-This sample app targets the ASP.Net Core (formerly ASP.Net 5) and the .Net CoreCLR version 1.0.0-rc1-final.
+This sample app targets the ASP.Net Core (formerly ASP.Net 5) and the .Net CoreCLR version 1.0.0-rc1-update1.
 
-1. Copy the credentials from your `visual-recognition-service` service in Bluemix to `src/VisualRecognition/config.json`, you can see the credentials using:
+1. Copy the credentials from your `visual-recognition-service` and `alchemy-api` services in Bluemix to `src/VisualRecognition/config.json`, you can see the credentials using:
 
     ```sh
     $ cf env <application-name>
@@ -67,13 +67,13 @@ This sample app targets the ASP.Net Core (formerly ASP.Net 5) and the .Net CoreC
     }
     ```
 
-    You need to copy the value of `VCAP_SERVICES` to `src/VisualRecognition/config.json`.
+    You need to copy the value of `VCAP_SERVICES` to `src/VisualRecognition/config.json`.  An example config.json file is available in `examples/config.json`.
 
 2. Install [ASP.Net Core](https://get.asp.net)
-  Be sure to install and use the 1.0.0-rc1-final version of the CoreCLR runtime:
+  Be sure to install and use the 1.0.0-rc1-update1 version of the CoreCLR runtime:
   ```sh
-  dnvm install 1.0.0-rc1-final -r coreclr
-  dnvm use 1.0.0-rc1-final -r coreclr
+  dnvm install 1.0.0-rc1-update1 -r coreclr
+  dnvm use 1.0.0-rc1-update1 -r coreclr
   ```
 
 3.1 Run the project (Linux/Mac). Go to the project folder in a terminal and run:
@@ -92,7 +92,8 @@ This sample app targets the ASP.Net Core (formerly ASP.Net 5) and the .Net CoreC
 
 * See src/VisualRecognition/Startup.cs for how to obtain the Watson Visual Recognition credentials
 * See src/WatsonServices/Services/VisualRecognitionService.cs for how to use the Watson Visual Recognition credentials and call the Watson Visual Recognition REST API
-* To use the VisualRecognitionService in your own project, simply import the WatsonServices project into your solution and add a dependency for it to your project.json.
+* See src/WatsonServices/Services/AlchemyVisionService.cs for how to use the Alchemy Vision credentials and call the AlchemyVision REST API
+* To use the VisualRecognitionService or AlchemyVisionService in your own project, simply import the WatsonServices project into your solution and add a dependency for it to your project.json.
 
 ## Troubleshooting
 
@@ -123,4 +124,5 @@ For more detailed information on troubleshooting your application, see the [Trou
 
 [cloud_foundry]: https://github.com/cloudfoundry/cli
 [service_url]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition.html
+[alchemy_vision_url]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/alchemy-vision.html
 [sign_up]: http://bluemix.net/
