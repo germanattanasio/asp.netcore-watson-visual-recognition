@@ -1,15 +1,11 @@
-﻿#if DNXCORE50 || DNX451
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-#endif
 using WatsonServices.Services;
 
 namespace WatsonServices.Extensions
 {
     public static class WatsonExtensions
     {
-        // this function should only be compiled if targetting DNXCORE50 or DNX451
-        #if DNXCORE50 || DNX451
         public static IServiceCollection AddWatsonServices(this IServiceCollection services, IConfiguration config)
         {
             Models.AlchemyAPICredentials alchemyCreds = new Models.AlchemyAPICredentials()
@@ -40,6 +36,5 @@ namespace WatsonServices.Extensions
 
             return services;
         }
-        #endif
     }
 }

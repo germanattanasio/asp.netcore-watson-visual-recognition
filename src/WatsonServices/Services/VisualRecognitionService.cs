@@ -13,11 +13,13 @@ namespace WatsonServices.Services
     public interface IVisualRecognitionService : IWatsonLearningService, IWatsonFileService
     {
         Task<ClassifyResponse> ClassifyAsync(string filePath, params string[] classifierIds);
+        Task<ClassifyResponse> ClassifyAsync(string filename, byte[] fileContents, params string[] classifierIds);
+        //Task<ClassifyResponse> ClassifyAsync(byte[] fileData, params string[] clasifierIds);
         Task<Classifier> CreateClassifierAsync(string positiveExamplesPath, string negativeExamplesPath, string classifierName);
         Task<bool> DeleteClassifierAsync(string classifierId);
         Task<bool> DeleteClassifierAsync(Classifier classifier);
         Task<Classifier> GetClassifierAsync(string classifierId);
-        Task<ClassifiersResponse> GetClassifiersAsync();
+        Task<ClassifiersResponse> GetClassifiersAsync(bool verbose = false);
     }
 
     public class VisualRecognitionService : WatsonLearningService, IVisualRecognitionService
@@ -82,7 +84,7 @@ namespace WatsonServices.Services
                         request.Add(new StringContent(serializedClassifiers), "classifier_ids");
                     }
                     
-                    // add the image content  to the form data
+                    // add the image content to the form data
                     request.Add(imageContent, "images_file", filename);
 
                     // send a POST request to the Watson service with the form data from request
@@ -241,7 +243,7 @@ namespace WatsonServices.Services
         /// Retrieves a list of available classifiers from the Watson service.
         /// </summary>
         /// <returns>A <c>ClassifiersResponse</c> object which contains a list of all available classifiers</returns>
-        public async Task<ClassifiersResponse> GetClassifiersAsync()
+        public async Task<ClassifiersResponse> GetClassifiersAsync(bool verbose = false)
         {
             ClassifiersResponse model = null;
 
@@ -251,7 +253,8 @@ namespace WatsonServices.Services
                 try
                 {
                     // send a GET request to the Watson service to retrieve the list of available classifiers
-                    var response = await client.GetAsync("api/v2/classifiers?version=" + VersionReleaseDate);
+                    var response = await client
+                        .GetAsync("api/v2/classifiers?version=" + VersionReleaseDate + "&verbose=" + verbose.ToString());
 
                     // the Watson service returns a 200 status code when the request was successful and
                     // a json object representing the list of classifiers

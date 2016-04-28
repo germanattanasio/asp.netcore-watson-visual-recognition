@@ -3,14 +3,14 @@ using WatsonServices.Models.VisualRecognition;
 
 namespace VisualRecognition.Mappers
 {
-    public class ScoresMapper
+    internal class ScoresMapper
     {
-        public static ClassificationScoreViewModel Map(ClassificationScore fromModel)
+        internal static ClassificationScoreViewModel Map(ClassificationScore fromModel)
         {
             ClassificationScoreViewModel toModel = new ClassificationScoreViewModel();
             toModel.ClassifierId = fromModel.ClassifierId;
             toModel.ClassifierName = fromModel.ClassifierName;
-            toModel.Score = fromModel.Score.ToString("P2");
+            toModel.Score = fromModel.Score.ToString();
             return toModel;
         }
     }

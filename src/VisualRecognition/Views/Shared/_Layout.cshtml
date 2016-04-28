@@ -1,17 +1,80 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>@ViewBag.Title</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport"
-          content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="ct" content="GiGVakAa-XhaKOYWtgJlqYNDPBfvEej3Etrg">
+    <link rel="icon" href="~/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="~/css/style.css">
 </head>
 <body>
-    <div>
-        @RenderBody()
+    <header class="_demo--heading">
+        <div class="_demo--container">
+            <a class="wordmark" href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/">
+                <span class="wordmark--left">IBM</span>
+                <span class="wordmark--right">Watson Developer Cloud</span>
+            </a>
+            <nav class="heading-nav" role="menubar">
+                <li class="base--li heading-nav--li" role="presentation">
+                    <a class="heading-nav--item" role="menuitem" href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/services-catalog.html">Services</a>
+                </li>
+                <li class="base--li heading-nav--li" role="presentation">
+                    <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/" role="menuitem" class="heading-nav--item">Docs</a>
+                </li>
+                <li class="base--li heading-nav--li" role="presentation">
+                    <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/gallery.html" role="menuitem" class="heading-nav--item">App Gallery</a>
+                </li>
+                <li class="base--li heading-nav--li" role="presentation">
+                    <a href="https://developer.ibm.com/watson/" role="menuitem" class="heading-nav--item">Community</a>
+                </li>
+            </nav>
+        </div>
+    </header>
+    <div class="_demo--banner">
+        <div class="_demo--container">
+            <div class="banner--service-icon-container">
+                <img src="images/service-icon.svg" alt="Visual Recognition API Icon" class="banner--service-icon">
+            </div>
+            <div class="banner--service-info">
+                <h1 class="banner--service-title base--h1">
+                    <img src="images/service-icon.svg" alt="Visual Recognition API Icon" class="banner--service-icon_INLINE">Visual Recognition
+                </h1>
+                <div class="banner--service-description">
+                    Visual Recognition partnered with Alchemy Vision, allows you to derive insights from an image based on its visual content. You can organize image libraries, understand an individual image, and create custom classifiers for specific results that are tailored to your needs.
+                </div>
+                <div class="banner--service-resource">
+                    <span class="icon icon-link"> </span>
+                    <strong>Resources:</strong>
+                </div>
+                <div class="banner--service-links">
+                    <li class="base--li banner--service-link-item">
+                        <a href="https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/visual-recognition/api/v2/" class="base--a">API Reference</a>
+                    </li>
+                    <li class="base--li banner--service-link-item">
+                        <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/visual-recognition/" class="base--a">Documentation</a>
+                    </li>
+                    <li class="base--li banner--service-link-item">
+                        <a href="https://github.com/degrim/asp.netcore-watson-visual-recognition" class="base--a">Fork on Github</a>
+                    </li>
+                    <li class="base--li banner--service-link-item">
+                        <a href="https://bluemix.net/deploy?repository=https://github.com/degrim/asp.netcore-watson-visual-recognition" class="base--a">Fork and Deploy on Bluemix</a>
+                    </li>
+                </div>
+            </div>
+        </div>
     </div>
+    @RenderBody()
+    @Html.Partial("_Templates")
+    <script src="~/js/vendor/browser-detect.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.5.7/jquery.fileupload.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.5.7/jquery.iframe-transport.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
+    @RenderSection("scripts", required: false)
+    <script src="~/js/vendors/tealeaf.js"></script>
 </body>
 </html>

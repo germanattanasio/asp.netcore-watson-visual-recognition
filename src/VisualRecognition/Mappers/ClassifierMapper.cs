@@ -4,9 +4,9 @@ using WatsonServices.Models.VisualRecognition;
 
 namespace VisualRecognition.Mappers
 {
-    public class ClassifierMapper
+    internal class ClassifierMapper
     {
-        public static ClassifierViewModel Map(Classifier fromModel)
+        internal static ClassifierViewModel Map(Classifier fromModel)
         {
             ClassifierViewModel toModel = new ClassifierViewModel();
 

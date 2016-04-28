@@ -1,22 +1,16 @@
-﻿using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Mvc.Rendering;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace VisualRecognition.ViewModels
 {
     public class VisualRecognitionViewModel
     {
-        public string ClassifierId { get; set; }
-        public IEnumerable<SelectListItem> ClassifierIds { get; set; }
-        public ICollection<ImageViewModel> ImageResults { get; set; }
-        public IFormFile ImageUpload { get; set; }
-        public string ImageUrl { get; set; }
-        public int MaxScores { get; set; }
+        [JsonProperty("images")]
+        public ICollection<ImageViewModel> Images { get; set; }
 
         public VisualRecognitionViewModel()
         {
-            ClassifierIds = new List<SelectListItem>();
-            ImageResults = new List<ImageViewModel>();
+            Images = new ImageViewModel[0];
         }
     }
 }

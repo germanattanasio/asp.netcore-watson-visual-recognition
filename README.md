@@ -17,10 +17,11 @@ Give it a try! Click the button below to fork into IBM DevOps Services and deplo
 3. Edit the `manifest.yml` file and change the `<application-name>` to something unique.
   ```none
 applications:
-- services:
-  - visual-recognition-service
-  name: <application-name>
+- name: <application-name>
   memory: 256M
+  services:
+  - visual-recognition-service
+  - alchemy-api
   ```
   The name you use will determine your application url initially, e.g. `<application-name>.mybluemix.net`.
 
@@ -30,9 +31,14 @@ applications:
   $ cf login -u <your user ID>
   ```
 
-5. Create the Visual Recognition service in Bluemix
+5a. Create the Visual Recognition service in Bluemix
   ```sh
   $ cf create-service visual_recognition free visual-recognition-service
+  ```
+
+5b. Create the AlchemyAPI service in Bluemix
+  ```sh
+  $ cf create-service alchemy_api free alchemy-api
   ```
 
 6. Push it live!
@@ -41,7 +47,7 @@ applications:
   ```
 
 ## Running the app locally
-This sample app targets the ASP.Net Core (formerly ASP.Net 5) and the .Net CoreCLR version 1.0.0-rc1-update1.
+This sample app targets the ASP.Net Core and the .Net CoreCLR version 1.0.0-rc1-update1.
 
 1. Copy the credentials from your `visual-recognition-service` and `alchemy-api` services in Bluemix to `src/VisualRecognition/config.json`, you can see the credentials using:
 
@@ -53,6 +59,16 @@ This sample app targets the ASP.Net Core (formerly ASP.Net 5) and the .Net CoreC
     System-Provided:
     {
     "VCAP_SERVICES": {
+      "alchemy_api": [{
+          "credentials": {
+            "apikey": "<apikey>",
+            "note": "It may take up to 5 minutes for this key to become active. This is your previously active free apikey. If you want a different one, please wait 24 hours after unbinding the key and try again.",
+            "url": "<url>"
+          },
+        "label": "alchemy_api",
+        "name": "alchemy-api",
+        "plan": "free"
+     }],
       "visual_recognition": [{
           "credentials": {
             "url": "<url>",
