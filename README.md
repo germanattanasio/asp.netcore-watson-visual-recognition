@@ -31,17 +31,17 @@ applications:
   $ cf login -u <your user ID>
   ```
 
-5a. Create the Visual Recognition service in Bluemix
+5. Create the Visual Recognition service in Bluemix
   ```sh
   $ cf create-service visual_recognition free visual-recognition-service
   ```
 
-5b. Create the AlchemyAPI service in Bluemix
+6. Create the AlchemyAPI service in Bluemix
   ```sh
   $ cf create-service alchemy_api free alchemy-api
   ```
 
-6. Push it live!
+7. Push it live!
   ```sh
   $ cf push
   ```
@@ -92,14 +92,16 @@ This sample app targets the ASP.Net Core and the .Net CoreCLR version 1.0.0-rc1-
   dnvm use 1.0.0-rc1-update1 -r coreclr
   ```
 
-3.1 Run the project (Linux/Mac). Go to the project folder in a terminal and run:
+3. Run the project
+
+  3.1. **(Linux/Mac)**. Go to the project folder in a terminal and run:
   ```sh
   $ dnu restore
   $ dnu build
   $ dnx web
   ```
 
-3.2 Run the project (Windows).
+  3.2. **(Windows)**.
   Open the solution in Visual Studio 2015 and wait for NuGet to restore packages, then press F5 to start debugging.  Alternatively, you can run the project from a command-line as described in section 3.1.
 
 4. Go to `http://localhost:5000`
