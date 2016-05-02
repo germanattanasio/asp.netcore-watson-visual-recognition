@@ -1,0 +1,407 @@
+﻿@{
+    ViewBag.Title = "Visual Recognition Demo";
+    Layout = "_Layout";
+}
+<div class="_demo--container">
+    <article class="_content base--article">
+        <div role="tabpanel" class="tab-panels tab-views">
+            <ul role="tablist" class="tab-panels--tab-list tab-views--tab-list">
+                <li role="presentation" class="tab-panels--tab-list-item tab-views--tab-list-item base--li">
+                    <a href="/" aria-controls="panel1" role="tab" class="tab-panels--tab tab-views--tab">Try out</a>
+                </li>
+                <li role="presentation" class="tab-panels--tab-list-item tab-views--tab-list-item base--li">
+                    <a href="/train" aria-controls="panel2" role="tab" class="tab-panels--tab tab-views--tab active">Train</a>
+                </li>
+                <li role="presentation" class="tab-panels--tab-list-item tab-views--tab-list-item base--li">
+                    <a href="/test" aria-controls="panel3" role="tab" class="tab-panels--tab tab-views--tab disabled">Test</a>
+                </li>
+            </ul>
+            <div class="tab-panels--tab-content">
+                <div class="loading train--loading">
+                    <img src="images/loading-indicator.gif" class="loading--image" />
+                    <p class="base--p loading--message">Watson is training your new classifier. </p>
+                    <p class="base--p loading--message">This might take up to 4-5 minutes based on number of images.</p>
+                </div>
+                <div class="error train--error">
+                    <img src="images/icons/alert.svg" class="train--error-image error--image" />
+                    <p class="base--p train--error-message error--message">Visual Recognition is not available right now...</p>
+                </div>
+                <div class="train--input">
+                    <h2 class="base--h2 train--header">Create a Custom Classifier</h2>
+                    <p class="base--p train--input-error-message">Only alphanumeric, spaces, hyphens, and underscores are characters allowed.</p>
+                    <input type="text" placeholder="Name a classifier" name="name" class="train--name-input train--url-input base--input" />
+                    <p class="base--p train--text">Upload images to define your classifier.  <a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/visual-recognition/overview.shtml" class="base--a">What's a classifier?</a>
+                    </p>
+                    <div class="train--row">
+                        <div class="train--positive-input">
+                            <h3 class="base--h3">Positive Images</h3>
+                            <form id="train--fileupload_positive" class="train--dropzone train--dropzone_positive">
+                                <label for="train--file_positive" class="train--file-input-button base--button">
+                                    <p class="base--p"> <span class="base--a">Select 50 or more images </span> or drag from your computer to define the classifier. More images will improve accuracy.</p>
+                                    <div class="train--file-preview-container positive-images">
+                                        <div class="train--limit-exceeded-message">While the API supports training with large numbers of images, for best results when using the demo, upload no more than 200 images.</div>
+                                        <div class="train--file-preview"></div>
+                                        <button class="base--a train--clear-button">clear</button>
+                                    </div>
+                                    <div class="train--file-loading">Loading...</div>
+                                </label>
+                                <input id="train--file_positive" type="file" name="positive_images" multiple="multiple" accept="image/x-png, image/jpg, image/gif, image/jpeg, image/png" title="Choose an image to upload" class="train--file-input" />
+                                <div class="train--file-indicator">
+                                    <div class="train--file-meter">
+                                        <div class="train--file-meter-percent"></div>
+                                    </div>
+                                    <div class="train--file-indicator-text">
+                                        <span class="train--files"></span> images
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="train--negative-input">
+                            <h3 class="base--h3">Negative Images</h3>
+                            <form id="train--fileupload_negative" class="train--dropzone train--dropzone_negative">
+                                <label for="train--file_negative" class="train--file-input-button base--button">
+                                    <p class="base--p">
+                                        <span class="base--a">Select 50 or more images </span> or drag from your computer to define the classifier. More images will improve accuracy.
+                                    </p>
+                                    <div class="train--file-preview-container negative-images">
+                                        <div class="train--limit-exceeded-message">While the API supports training with large numbers of images, for best results when using the demo, upload no more than 200 images.</div>
+                                        <div class="train--file-preview"></div>
+                                        <button class="base--a train--clear-button">clear</button>
+                                        <input id="train--file_negative" type="file" name="negative_images" multiple="multiple" accept="image/x-png, image/jpg, image/gif, image/jpeg, image/png" title="Choose an image to upload" class="train--file-input" />
+                                    </div>
+                                    <div class="train--file-loading">Loading...</div>
+                                </label>
+                                <div class="train--file-indicator">
+                                    <div class="train--file-meter">
+                                        <div class="train--file-meter-percent"></div>
+                                    </div>
+                                    <div class="train--file-indicator-text">
+                                        <span class="train--files"></span> images
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="train--row train--browser-warning">
+                        <p class="base--p"><b>Important:</b> Upload less than 55MB of images at a time for the best experience in your current browser.</p>
+                    </div>
+                    <div class="train--row">
+                        <button disabled="true" class="train--train-button base--button">Train your classifier</button>
+                    </div>
+                    <p class="base--p train--text">You can also use one of the following sample image bundles to train your new classifier<br />NOTE: Your classifiers and images are not saved when you exit the browser.</p>
+                    <div class="train--bundles">
+                        <div class="train--bundle">
+                            <a href="javascript: void(0)" data-id="car_vs_truck" class="base--a train--bundle-select-all">use bundle</a>
+                            <h3 class="base--h3 train--bundle-header">Car</h3>
+                            <h5 class="train--bundle-sub-header">positive images</h5>
+                            <div class="train--bundle-positive">
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/positive/0.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/positive/1.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/positive/2.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/positive/3.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/positive/4.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/positive/5.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/positive/6.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/positive/7.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/positive/8.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/positive/9.jpg" class="train--bundle-thumb" />
+                                    <div class="train--overlay">
+                                        <div class="train--overlay-more">+40</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="train--bundle-sub-header">negative images</h5>
+                            <div class="train--bundle-negative">
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/negative/0.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/negative/1.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/negative/2.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/negative/3.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/negative/4.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/negative/5.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/negative/6.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/negative/7.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/negative/8.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/car_vs_truck/negative/9.jpg" class="train--bundle-thumb" />
+                                    <div class="train--overlay">
+                                        <div class="train--overlay-more">+40</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="train--bundle">
+                            <a href="javascript: void(0)" data-id="pizza_vs_spaghetti" class="base--a train--bundle-select-all">use bundle</a>
+                            <h3 class="base--h3 train--bundle-header">Pizza</h3>
+                            <h5 class="train--bundle-sub-header">positive images</h5>
+                            <div class="train--bundle-positive">
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/positive/0.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/positive/1.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/positive/2.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/positive/3.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/positive/4.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/positive/5.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/positive/6.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/positive/7.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/positive/8.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/positive/9.jpg" class="train--bundle-thumb" />
+                                    <div class="train--overlay">
+                                        <div class="train--overlay-more">+40</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="train--bundle-sub-header">negative images</h5>
+                            <div class="train--bundle-negative">
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/negative/0.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/negative/1.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/negative/2.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/negative/3.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/negative/4.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/negative/5.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/negative/6.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/negative/7.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/negative/8.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/pizza_vs_spaghetti/negative/9.jpg" class="train--bundle-thumb" />
+                                    <div class="train--overlay">
+                                        <div class="train--overlay-more">+40</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="train--bundle">
+                            <a href="javascript: void(0)" data-id="golden_retrievers_vs_dogs" class="base--a train--bundle-select-all">use bundle</a>
+                            <h3 class="base--h3 train--bundle-header">Golden Retrievers</h3>
+                            <h5 class="train--bundle-sub-header">positive images</h5>
+                            <div class="train--bundle-positive">
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/positive/0.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/positive/1.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/positive/2.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/positive/3.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/positive/4.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/positive/5.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/positive/6.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/positive/7.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/positive/8.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/positive/9.jpg" class="train--bundle-thumb" />
+                                    <div class="train--overlay">
+                                        <div class="train--overlay-more">+40</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="train--bundle-sub-header">negative images</h5>
+                            <div class="train--bundle-negative">
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/negative/0.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/negative/1.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/negative/2.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/negative/3.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/negative/4.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/negative/5.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/negative/6.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/negative/7.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/negative/8.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/golden_retrievers_vs_dogs/negative/9.jpg" class="train--bundle-thumb" />
+                                    <div class="train--overlay">
+                                        <div class="train--overlay-more">+40</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="train--bundle">
+                            <a href="javascript: void(0)" data-id="baseball_vs_cricket" class="base--a train--bundle-select-all">use bundle</a>
+                            <h3 class="base--h3 train--bundle-header">Baseball</h3>
+                            <h5 class="train--bundle-sub-header">positive images</h5>
+                            <div class="train--bundle-positive">
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/positive/0.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/positive/1.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/positive/2.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/positive/3.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/positive/4.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/positive/5.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/positive/6.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/positive/7.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/positive/8.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/positive/9.jpg" class="train--bundle-thumb" />
+                                    <div class="train--overlay">
+                                        <div class="train--overlay-more">+40</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="train--bundle-sub-header">negative images</h5>
+                            <div class="train--bundle-negative">
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/negative/0.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/negative/1.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/negative/2.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/negative/3.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/negative/4.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/negative/5.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/negative/6.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/negative/7.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/negative/8.jpg" class="train--bundle-thumb" />
+                                </div>
+                                <div class="train--bundle-thumb-container square">
+                                    <img src="images/datasets/baseball_vs_cricket/negative/9.jpg" class="train--bundle-thumb" />
+                                    <div class="train--overlay">
+                                        <div class="train--overlay-more">+40</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+</div>
+@section scripts {
+    <script src="~/js/demo.js"></script>
+    <script src="~/js/use.js"></script>
+    <script src="~/js/train.js"></script>
+}

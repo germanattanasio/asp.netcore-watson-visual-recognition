@@ -21,6 +21,14 @@ namespace VisualRecognition.Services
             };
         }
 
+        public async Task<byte[]> DecodeFileAsync(string encodedFileString)
+        {
+            return await Task.Run(() =>
+            {
+                return Convert.FromBase64String(encodedFileString);
+            });
+        }
+
         public async Task<string> EncodeFileAsync(byte[] fileContentByteArray)
         {
             return await Task.Run(() =>

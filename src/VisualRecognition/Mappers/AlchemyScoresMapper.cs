@@ -3,14 +3,14 @@ using WatsonServices.Models.AlchemyVision;
 
 namespace VisualRecognition.Mappers
 {
-    public class AlchemyScoresMapper
+    internal class AlchemyScoresMapper
     {
-        public static ClassificationScoreViewModel Map(ImageKeyword fromModel)
+        internal static ClassificationScoreViewModel Map(ImageKeyword fromModel)
         {
             ClassificationScoreViewModel toModel = new ClassificationScoreViewModel();
             toModel.ClassifierId = fromModel.Text;
             toModel.ClassifierName = fromModel.Text;
-            toModel.Score = fromModel.ConfidenceScore.HasValue ? fromModel.ConfidenceScore.Value.ToString("P2") : @"Not a match";
+            toModel.Score = fromModel.ConfidenceScore.HasValue ? fromModel.ConfidenceScore.Value.ToString() : @"Not a match";
             return toModel;
         }
     }

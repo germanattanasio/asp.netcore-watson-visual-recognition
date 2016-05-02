@@ -78,7 +78,16 @@ namespace VisualRecognition
             loggerFactory.AddConsole();
             app.UseDeveloperExceptionPage();
             app.UseStaticFiles();
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "Home",
+                    template: "{action}",
+                    defaults: new { controller = "Home" })
+                .MapRoute(
+                    name: "default",
+                    template: "{controller=home}/{action=index}");
+            });
         }
     }
 }

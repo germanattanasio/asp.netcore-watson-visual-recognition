@@ -17,6 +17,7 @@
     },
     "web": {
       "commandName": "web",
+      "launchBrowser": true,
       "environmentVariables": {
         "Hosting:Environment": "Development"
       }
