@@ -24,13 +24,13 @@ namespace WatsonServices.Extensions
             // register service credentials and services if credentials are valid
             if (alchemyCreds.IsValid)
             {
-                services.AddInstance(typeof(Models.AlchemyAPICredentials), alchemyCreds);
+                services.AddSingleton(typeof(Models.AlchemyAPICredentials), alchemyCreds);
                 services.AddTransient<IAlchemyVisionService, AlchemyVisionService>();
             }
 
             if (vrCreds.IsValid)
             {
-                services.AddInstance(typeof(Models.VisualRecognition.Credentials), vrCreds);
+                services.AddSingleton(typeof(Models.VisualRecognition.Credentials), vrCreds);
                 services.AddTransient<IVisualRecognitionService, VisualRecognitionService>();
             }
 

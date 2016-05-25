@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -12,11 +12,12 @@ namespace VisualRecognition.ViewModels
 {
     public class ClassifyImageViewModelBinder : IModelBinder
     {
-        public async Task<ModelBindingResult> BindModelAsync(ModelBindingContext bindingContext)
+        public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
             if (bindingContext.ModelType != typeof(ClassifyImageViewModel))
             {
-                return ModelBindingResult.NoResult;
+                bindingContext.Result = null;
+                return;
             }
 
             var result = new ClassifyImageViewModel();
@@ -39,7 +40,8 @@ namespace VisualRecognition.ViewModels
                         if (!response.IsSuccessStatusCode)
                         {
                             // return 400 status
-                            return ModelBindingResult.Failed("url");
+                            bindingContext.Result = ModelBindingResult.Failed("url");
+                            return;
                         }
 
                         fileExt = Path.GetExtension(result.Url);
@@ -53,7 +55,7 @@ namespace VisualRecognition.ViewModels
                     {
                         fileExt = Path.GetExtension(result.Url);
                         var hostingEnvironmentService = (IHostingEnvironment)bindingContext.OperationBindingContext
-                            .HttpContext.ApplicationServices.GetService(typeof(IHostingEnvironment));
+                            .HttpContext.RequestServices.GetService(typeof(IHostingEnvironment));
 
                         result.ImageByteContent = File.ReadAllBytes(
                             Path.Combine(hostingEnvironmentService.WebRootPath, result.Url));
@@ -70,7 +72,7 @@ namespace VisualRecognition.ViewModels
                     try
                     {
                         var fileEncoderService = (IFileEncoderService)bindingContext.OperationBindingContext.HttpContext
-                            .ApplicationServices.GetService(typeof(IFileEncoderService));
+                            .RequestServices.GetService(typeof(IFileEncoderService));
 
                         string[] encodedFileParts = result.ImageData.Split(';');
                         encodedFile = encodedFileParts[1].Split(',')[1];
@@ -91,7 +93,8 @@ namespace VisualRecognition.ViewModels
             catch (Exception ex)
             {
                 Console.WriteLine(ex.StackTrace);
-                return ModelBindingResult.Failed(bindingContext.FieldName);
+                bindingContext.Result = ModelBindingResult.Failed(bindingContext.FieldName);
+                return;
             }
 
             try
@@ -108,7 +111,8 @@ namespace VisualRecognition.ViewModels
                 Console.WriteLine(ex.StackTrace);
             }
 
-            return ModelBindingResult.Success(bindingContext.FieldName, result);
+            bindingContext.Result = ModelBindingResult.Success(bindingContext.FieldName, result);
+            return;
         }
     }
 }

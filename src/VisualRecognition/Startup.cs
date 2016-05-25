@@ -1,5 +1,5 @@
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -15,7 +15,7 @@ namespace VisualRecognition
     {
         public IConfiguration Configuration { get; set; }
 
-        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
+        public Startup(IHostingEnvironment env)
         {
             var configBuilder = new ConfigurationBuilder()
                 .AddJsonFile("config.json", optional: true);
@@ -88,6 +88,21 @@ namespace VisualRecognition
                     name: "default",
                     template: "{controller=home}/{action=index}");
             });
+        }
+
+        public static void Main(string[] args)
+        {
+            var config = new ConfigurationBuilder()
+                .AddCommandLine(args)
+                .Build();
+
+            var host = new WebHostBuilder()
+                .UseKestrel()
+                .UseConfiguration(config)
+                .UseStartup<Startup>()
+                .Build();
+
+            host.Run();
         }
     }
 }

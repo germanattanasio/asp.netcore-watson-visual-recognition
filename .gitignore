@@ -1,8 +1,9 @@
 .DS_STORE
 .vs/
 artifacts/
+obj/
 bin/
 *.xproj.user
 project.lock.json
 temp_files/
-src/VisualRecognition/config.json
+config.json

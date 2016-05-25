@@ -1,28 +1,50 @@
 {
-  "webroot": "wwwroot",
-  "dependencies": {
-    "Microsoft.AspNet.Diagnostics": "1.0.0-rc1-final",
-    "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
-    "Microsoft.AspNet.Server.Kestrel": "1.0.0-rc1-final",
-    "Microsoft.AspNet.StaticFiles": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Configuration": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
-    "System.IO.Compression.ZipFile": "4.0.0",
-    "WatsonServices": "1.0.0"
+  "buildOptions": {
+    "copyToOutput": [
+      "**.cshtml",
+      "config.json",
+      "wwwroot"
+    ],
+    "debugType": "portable",
+    "emitEntryPoint": true,
+    "preserveCompilationContext": true
   },
-  "commands": {
-    "kestrel": "Microsoft.AspNet.Server.Kestrel",
-    "web": "Microsoft.AspNet.Server.Kestrel"
+  "dependencies": {
+    "Microsoft.AspNetCore.Diagnostics": "1.0.0-rc2-final",
+    "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final",
+    "Microsoft.AspNetCore.Server.Kestrel": "1.0.0-rc2-final",
+    "Microsoft.AspNetCore.StaticFiles": "1.0.0-rc2-final",
+    "Microsoft.Extensions.Configuration": "1.0.0-rc2-final",
+    "Microsoft.Extensions.Configuration.CommandLine": "1.0.0-rc2-final",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0-rc2-final",
+    "System.IO.Compression.ZipFile": "4.0.1-rc2-24027",
+    "WatsonServices": "1.0.0-rc2-final"
   },
   "frameworks": {
-    "dnxcore50": {}
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": "1.0.0-rc2-3002702"
+      },
+      "imports": [
+        "dnxcore50",
+        "netcore45",
+        "portable-net45+netcore45+wp8+wp81+wpa81"
+      ]
+    }
   },
-  "exclude": [
-    "wwwroot"
-  ],
-  "publishExclude": [
-    "**.xproj",
-    "**.user",
-    "**.vspscc"
-  ]
+  "runtimes": {
+    "ubuntu.14.04-x64": {}
+  },
+  "publishOptions": {
+    "include": [
+      "**.cshtml",
+      "wwwroot"
+    ],
+    "exclude": [
+      "**.xproj",
+      "**.user",
+      "**.vspscc"
+    ]
+  },
+  "version": "1.0.0-rc2-final"
 }

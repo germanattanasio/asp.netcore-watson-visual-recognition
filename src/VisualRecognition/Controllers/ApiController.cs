@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.PlatformAbstractions;
 using System;
 using System.IO;
@@ -14,19 +14,16 @@ namespace VisualRecognition.Controllers
     public class ApiController : Controller
     {
         private readonly IAlchemyVisionService _alchemyVisionService;
-        private readonly IApplicationEnvironment _applicationEnvironment;
         private readonly IFileEncoderService _fileEncoderService;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IVisualRecognitionService _visualRecognitionService;
 
         public ApiController(IAlchemyVisionService alchemyVisionService,
-            IApplicationEnvironment applicationEnvironment,
             IFileEncoderService fileEncoderService,
             IHostingEnvironment hostingEnvironment,
             IVisualRecognitionService visualRecognitionService)
         {
             _alchemyVisionService = alchemyVisionService;
-            _applicationEnvironment = applicationEnvironment;
             _fileEncoderService = fileEncoderService;
             _hostingEnvironment = hostingEnvironment;
             _visualRecognitionService = visualRecognitionService;
@@ -41,31 +38,31 @@ namespace VisualRecognition.Controllers
         {
             if (viewModel == null)
             {
-                return HttpBadRequest("Missing view model");
+                return BadRequest("Missing view model");
             }
 
             // check if positive images are missing, return 400 if so
             if (viewModel.Positives == null)
             {
-                return HttpBadRequest("Missing positive images");
+                return BadRequest("Missing positive images");
             }
 
             // check if negative images are missing, return 400 if so
             if (viewModel.Negatives == null)
             {
-                return HttpBadRequest("Missing negative images");
+                return BadRequest("Missing negative images");
             }
 
             // check size of positive images array
             if (viewModel.Positives.Length < 10)
             {
-                return HttpBadRequest("Minimum positive images (10) sent:" + viewModel.Positives.Length);
+                return BadRequest("Minimum positive images (10) sent:" + viewModel.Positives.Length);
             }
 
             // check size of positive images array
             if (viewModel.Negatives.Length < 10)
             {
-                return HttpBadRequest("Minimum negative images (10) sent:" + viewModel.Negatives.Length);
+                return BadRequest("Minimum negative images (10) sent:" + viewModel.Negatives.Length);
             }
 
             // either the images are base64 encoded images, or they're relative paths for included datasets
@@ -205,7 +202,7 @@ namespace VisualRecognition.Controllers
         {
             string filePath = "";
             while (Directory.Exists(
-                filePath = Path.Combine(_applicationEnvironment.ApplicationBasePath, "temp_files", "uploads", Guid.NewGuid().ToString()))) ;
+                filePath = Path.Combine(_hostingEnvironment.ContentRootPath, "temp_files", "uploads", Guid.NewGuid().ToString()))) ;
 
             // create the path and return it
             Directory.CreateDirectory(filePath);

@@ -1,25 +1,33 @@
 ﻿{
+  "buildOptions": {
+    "debugType": "portable"
+  },
   "dependencies": {
     "Microsoft.AspNet.WebApi.Client": "5.2.3",
-    "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
-    "Microsoft.Extensions.Configuration": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
-    "Newtonsoft.Json": "8.0.2",
-    "System.Linq": "4.0.1-beta-23516",
-    "System.Net.Http": "4.0.0",
-    "System.Runtime.InteropServices": "4.0.21-beta-23516",
-    "System.Runtime.Serialization.Primitives": "4.0.10",
-    "System.Runtime.Serialization.Xml": "4.0.10"
+    "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final",
+    "Microsoft.Extensions.Configuration": "1.0.0-rc2-final",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0-rc2-final",
+    "Microsoft.Extensions.Logging.Console": "1.0.0-rc2-final",
+    "Newtonsoft.Json": "8.0.3",
+    "NETStandard.Library": "1.5.0-rc2-24027",
+    "System.Linq": "4.1.0-rc2-24027"
   },
   "description": "WatsonServices Class Library",
   "frameworks": {
-    "dnxcore50": { }
+    "netstandard1.5": {
+      "imports": [
+        "dnxcore50",
+        "netcore45",
+        "portable-net45+netcore45+wp8+wp81+wpa81"
+      ]
+    }
   },
-  "publishExclude": [
-    "**.xproj",
-    "**.user",
-    "**.vspscc"
-  ],
-  "version": "1.0.0"
+  "publishOptions": {
+    "exclude": [
+      "**.xproj",
+      "**.user",
+      "**.vspscc"
+    ]
+  },
+  "version": "1.0.0-rc2-final"
 }
