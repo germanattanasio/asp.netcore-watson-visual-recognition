@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace WatsonServices.Models.AlchemyVision
+namespace WatsonServices.Models.VisualRecognition
 {
     public class ImageFaceGender
     {

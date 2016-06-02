@@ -10,7 +10,8 @@ namespace VisualRecognition.Mappers
             ClassificationScoreViewModel toModel = new ClassificationScoreViewModel();
             toModel.ClassifierId = fromModel.ClassifierId;
             toModel.ClassifierName = fromModel.ClassifierName;
-            toModel.Score = fromModel.Score.ToString();
+            //toModel.Score = fromModel.Score.ToString();
+            throw new System.NotImplementedException();
             return toModel;
         }
     }

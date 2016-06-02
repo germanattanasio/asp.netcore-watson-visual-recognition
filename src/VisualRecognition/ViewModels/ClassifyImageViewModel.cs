@@ -9,6 +9,7 @@
         public byte[] ImageByteContent { get; set; }
         public string ImageFileName { get; set; }
         public ClassifierViewModel Classifier { get; set; }
+        public string[] ClassifierOwners { get; internal set; }
 
         public ClassifyImageViewModel()
         {

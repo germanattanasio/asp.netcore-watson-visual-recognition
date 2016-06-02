@@ -6,4 +6,4 @@ bin/
 *.xproj.user
 project.lock.json
 temp_files/
-config.json
+src/**/vcap_services.json

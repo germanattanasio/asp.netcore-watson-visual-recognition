@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.PlatformAbstractions;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -8,28 +7,28 @@ using VisualRecognition.Mappers;
 using VisualRecognition.Services;
 using VisualRecognition.ViewModels;
 using WatsonServices.Services;
+using WatsonServices.Models.VisualRecognition;
 
 namespace VisualRecognition.Controllers
 {
     public class ApiController : Controller
     {
-        private readonly IAlchemyVisionService _alchemyVisionService;
         private readonly IFileEncoderService _fileEncoderService;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IVisualRecognitionService _visualRecognitionService;
 
-        public ApiController(IAlchemyVisionService alchemyVisionService,
-            IFileEncoderService fileEncoderService,
+        private const AcceptLanguage DefaultAcceptLanguage = AcceptLanguage.EN;
+        private const double DefaultThreshold = 0.5f;
+
+        public ApiController(IFileEncoderService fileEncoderService,
             IHostingEnvironment hostingEnvironment,
             IVisualRecognitionService visualRecognitionService)
         {
-            _alchemyVisionService = alchemyVisionService;
             _fileEncoderService = fileEncoderService;
             _hostingEnvironment = hostingEnvironment;
             _visualRecognitionService = visualRecognitionService;
 
             // set to false, or comment these lines to opt out of sharing data with Watson
-            _alchemyVisionService.ShareData = true;
             _visualRecognitionService.ShareData = true;
         }
 
@@ -164,18 +163,19 @@ namespace VisualRecognition.Controllers
 
             if (viewModel.ImageByteContent?.Length > 0)
             {
-                if (Request.Query.Keys.Contains("classifier_id"))
-                {
+                //if (Request.Query.Keys.Contains("classifier_id"))
+                //{
                     return new JsonResult(
                         ImagesMapper.Map(await _visualRecognitionService.ClassifyAsync(
-                            viewModel.ImageFileName, viewModel.ImageByteContent, viewModel.Classifier.ClassifierId))
+                            viewModel.ImageFileName, viewModel.ImageByteContent, DefaultAcceptLanguage, DefaultThreshold,
+                            ClassifierOwnerMapper.Map(viewModel.ClassifierOwners), viewModel.Classifier.ClassifierId))
                     );
-                }
+                //}
 
-                return new JsonResult(
-                    ImagesMapper.Map(await _alchemyVisionService.GetImageKeywordsAsync(
-                        viewModel.ImageByteContent, false, viewModel.Url))
-                );
+                //return new JsonResult(
+                //    ImagesMapper.Map(await _alchemyVisionService.GetImageKeywordsAsync(
+                //        viewModel.ImageByteContent, false, viewModel.Url))
+                //);
             }
 
             // byte content was null or 0 length

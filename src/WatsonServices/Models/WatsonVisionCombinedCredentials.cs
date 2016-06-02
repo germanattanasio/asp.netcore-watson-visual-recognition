@@ -1,6 +1,6 @@
 ﻿namespace WatsonServices.Models
 {
-    public class AlchemyAPICredentials : IValidated
+    public class WatsonVisionCombinedCredentials : IValidated
     {
         public string ApiEndPoint { get; set; }
         public string ApiKey { get; set; }

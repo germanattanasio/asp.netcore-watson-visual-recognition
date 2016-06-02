@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using VisualRecognition.ViewModels;
-using WatsonServices.Models.AlchemyVision;
 using WatsonServices.Models.VisualRecognition;
 
 namespace VisualRecognition.Mappers
@@ -27,20 +25,6 @@ namespace VisualRecognition.Mappers
             {
                 toModel.Images.Add(new ImageViewModel());
             }
-
-            return toModel;
-        }
-
-        internal static VisualRecognitionViewModel Map(ImageKeywordResponse fromModel)
-        {
-            VisualRecognitionViewModel toModel = new VisualRecognitionViewModel();
-
-            toModel.Images = new List<ImageViewModel>();
-            toModel.Images.Add(new ImageViewModel()
-            {
-                ImageName = !string.IsNullOrEmpty(fromModel?.Url) ? Path.GetFileName(fromModel.Url) : "",
-                Scores = fromModel?.ImageKeywords?.Select(AlchemyScoresMapper.Map).ToArray()
-            });
 
             return toModel;
         }

@@ -1,4 +1,4 @@
-﻿namespace WatsonServices.Models.AlchemyVision
+﻿namespace WatsonServices.Models.VisualRecognition
 {
     public enum ImagePostType
     {
