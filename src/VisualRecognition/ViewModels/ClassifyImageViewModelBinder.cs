@@ -12,6 +12,12 @@ namespace VisualRecognition.ViewModels
 {
     public class ClassifyImageViewModelBinder : IModelBinder
     {
+        private const string CookiesClassifierKey = "classifier";
+        private const string ImageDataKey = "image_data";
+        private const string UseImageSetKey = "use--example-images";
+        private const string TestImageSetKey = "test--example-images";
+        private const string UrlKey = "url";
+
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
             if (bindingContext.ModelType != typeof(ClassifyImageViewModel))
@@ -24,14 +30,15 @@ namespace VisualRecognition.ViewModels
 
             try
             {
-                result.ImageData = (string)bindingContext.ValueProvider.GetValue("image_data");
-                result.ImageSet = (string)bindingContext.ValueProvider.GetValue("use--example-images");
-                result.Url = (string)bindingContext.ValueProvider.GetValue("url");
+                result.ImageData = (string)bindingContext.ValueProvider.GetValue(ImageDataKey);
+                result.ImageSet = ((string)bindingContext.ValueProvider.GetValue(UseImageSetKey)) ??
+                    ((string)bindingContext.ValueProvider.GetValue(TestImageSetKey));
+                result.Url = (string)bindingContext.ValueProvider.GetValue(UrlKey);
 
                 Uri imageUri;
                 string fileExt = "";
-                bool isUri = Uri.TryCreate(result.Url, UriKind.Absolute, out imageUri);
-                if (isUri)
+                result.IsUrl = Uri.TryCreate(result.Url, UriKind.Absolute, out imageUri);
+                if (result.IsUrl)
                 {
                     // download the file
                     using (var client = new HttpClient())
@@ -99,8 +106,10 @@ namespace VisualRecognition.ViewModels
 
             try
             {
-                string classifierJson = bindingContext.OperationBindingContext.HttpContext.Request.Cookies["classifier"];
-                if (classifierJson != null)
+                string classifierJson = bindingContext.OperationBindingContext.HttpContext.Request.Cookies[CookiesClassifierKey];
+                // only use this classifier if we're looking at test images
+                if (classifierJson != null &&
+                    !string.IsNullOrEmpty(((string)bindingContext.ValueProvider.GetValue(TestImageSetKey))))
                 {
                     result.Classifier = ClassifierMapper.Map(
                         Newtonsoft.Json.JsonConvert.DeserializeObject<Classifier>(classifierJson));

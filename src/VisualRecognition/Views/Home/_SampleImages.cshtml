@@ -1,0 +1,13 @@
+﻿@model VisualRecognition.ViewModels.SampleImagesViewModel
+@if (Model?.BundleImages?.Any() == true)
+{
+    for (var i = 0; i < Model.BundleImages.Length; i++)
+    {
+        var id = Model.ClassName + "--image" + i + "_" + Model.BundleId;
+        <input id="@id" class="@Model.ClassName--example-radio" type="radio" name="@Model.ClassName--example-images" value="someImage" />
+        <label style="height: 115.8px;" for="@id" class="@Model.ClassName--example-thumb square">
+            <img class="@Model.ClassName--example-image" src="@Model.BundleImages[i]" />
+            <div class="@Model.ClassName--example-image-overlay"></div>
+        </label>
+    }
+}

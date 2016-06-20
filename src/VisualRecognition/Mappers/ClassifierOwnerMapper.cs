@@ -6,8 +6,13 @@ namespace VisualRecognition.Mappers
 {
     public class ClassifierOwnerMapper
     {
-        internal static ICollection<ClassifierOwner> Map(string[] owners)
+        internal static ICollection<ClassifierOwner> Map(ICollection<string> owners)
         {
+            if (owners == null)
+            {
+                return null;
+            }
+
             ICollection<ClassifierOwner> result = new List<ClassifierOwner>();
             foreach (var ownerString in owners)
             {

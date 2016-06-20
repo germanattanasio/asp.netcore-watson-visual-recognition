@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace WatsonServices.Models.VisualRecognition
+namespace VisualRecognition.ViewModels
 {
-    public class ImageFaceIdentity
+    public class ImageFaceIdentityViewModel
     {
         [JsonProperty("name")]
         public string Name { get; set; }

@@ -21,7 +21,6 @@ applications:
   memory: 256M
   services:
   - visual-recognition-service
-  - alchemy-api
   ```
   The name you use will determine your application url initially, e.g. `<application-name>.mybluemix.net`.
 
@@ -41,7 +40,7 @@ applications:
   ```
 
 ## Running the app locally
-This sample app targets the ASP.Net Core and the .Net CoreCLR version 1.0.0-rc1-update1.
+This sample app targets the ASP.NET Core and the .NET CoreCLR version 1.0.0-rc2-final using .NET CLI version 1.0.0-preview1-002702.
 
 1. Copy the credentials from your `watson_vision_combined` service in Bluemix to `src/VisualRecognition/vcap_services.json`, you can see the credentials using:
 
@@ -69,12 +68,8 @@ This sample app targets the ASP.Net Core and the .Net CoreCLR version 1.0.0-rc1-
 
     You need to copy the value of `VCAP_SERVICES` to `src/VisualRecognition/vcap_services.json`.  An example vcap_services.json file is available in `examples/vcap_services.json`.
 
-2. Install [ASP.Net Core](https://get.asp.net)
-  Be sure to install and use the 1.0.0-rc1-update1 version of the CoreCLR runtime:
-  ```sh
-  dnvm install 1.0.0-rc1-update1 -r coreclr
-  dnvm use 1.0.0-rc1-update1 -r coreclr
-  ```
+2. Install [.NET Core](https://www.microsoft.com/net/core)
+  Be sure to install the 1.0.0-preview1-002702 version of the .NET CLI.
 
 3. Run the project
 

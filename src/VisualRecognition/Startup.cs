@@ -44,6 +44,10 @@ namespace VisualRecognition
                     template: "{action}",
                     defaults: new { controller = "Home" })
                 .MapRoute(
+                    name: "Api",
+                    template: "{controller=api}/{action}/{classifierId}"
+                    )
+                .MapRoute(
                     name: "default",
                     template: "{controller=home}/{action=index}");
             });

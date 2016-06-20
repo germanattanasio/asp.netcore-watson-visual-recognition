@@ -35,9 +35,11 @@ namespace WatsonServices.Services
         Task<bool> DeleteClassifierAsync(Classifier classifier);
         Task<Classifier> GetClassifierAsync(string classifierId);
         Task<ClassifiersResponse> GetClassifiersAsync(bool verbose = false);
-        Task<ClassifyResponse> GetImageSceneTextAsync(string image, ImagePostType type);
+        Task<ClassifyResponse> GetImageSceneTextAsync(string url);
+        Task<ClassifyResponse> GetImageSceneTextAsync(string imageFileName, byte[] imageFileContents);
         Task<ClassifyResponse> RecognizeFacesAsync(string url);
         Task<ClassifyResponse> RecognizeFacesAsync(string imageFilePath, string url = null);
+        Task<ClassifyResponse> RecognizeFacesAsync(string imageFileName, byte[] imageFileContents, string url = null);
     }
 
     public class VisualRecognitionService : WatsonLearningService, IVisualRecognitionService
@@ -199,7 +201,16 @@ namespace WatsonServices.Services
                     // if the request succeeded, read the json result as a Response object
                     if (response.IsSuccessStatusCode)
                     {
-                        model = await response.Content.ReadAsAsync<ClassifyResponse>();
+                        var jsonData = await response.Content.ReadAsStringAsync();
+                        model = JsonConvert.DeserializeObject<ClassifyResponse>(jsonData);
+                    }
+                    else
+                    {
+                        var responseMessage = await response.Content.ReadAsStringAsync();
+                        model.Error = new ErrorResponse()
+                        {
+                            Description = responseMessage
+                        };
                     }
                 }
                 catch (Exception ex)
@@ -233,13 +244,20 @@ namespace WatsonServices.Services
                     }
 
                     // read all bytes in the two zip files into a byte buffer for each file
-                    byte[] negativeBuffer = File.ReadAllBytes(negativeExamplesZipFile);
+                    byte[] negativeBuffer = null;
+                    if (!string.IsNullOrEmpty(negativeExamplesZipFile))
+                    {
+                        negativeBuffer = File.ReadAllBytes(negativeExamplesZipFile);
+                    }
 
                     // create a MultipartFormDataContent to store the form data to be sent
                     // create a list of HttpContent containing the positive examples
                     var httpContents = positiveExamples.Select(m => GetHttpContentFromPositiveExamples(m)).ToList();
                     // create an HttpContent from the negative examples buffer and add it to the list
-                    httpContents.Add(GetHttpContentFromNegativeExamples(Path.GetFileName(negativeExamplesZipFile), negativeBuffer));
+                    if (negativeBuffer != null)
+                    {
+                        httpContents.Add(GetHttpContentFromNegativeExamples(Path.GetFileName(negativeExamplesZipFile), negativeBuffer));
+                    }
                     // create the request object using the list
                     MultipartFormDataContent request = CreateFileUploadRequest(httpContents.ToArray());
 
@@ -387,23 +405,7 @@ namespace WatsonServices.Services
             return model;
         }
 
-        public async Task<ClassifyResponse> GetImageSceneTextAsync(string image, ImagePostType type)
-        {
-            if (type == ImagePostType.Url)
-            {
-                return await GetImageSceneTextFromUrlAsync(image);
-            }
-            else if (type == ImagePostType.File)
-            {
-                return await GetImageSceneTextFromFileAsync(image);
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        private async Task<ClassifyResponse> GetImageSceneTextFromUrlAsync(string url)
+        public async Task<ClassifyResponse> GetImageSceneTextAsync(string url)
         {
             ClassifyResponse model = new ClassifyResponse();
 
@@ -439,7 +441,7 @@ namespace WatsonServices.Services
             return model;
         }
 
-        private async Task<ClassifyResponse> GetImageSceneTextFromFileAsync(string imageFile)
+        public async Task<ClassifyResponse> GetImageSceneTextAsync(string imageFileName, byte[] imageFileContents)
         {
             ClassifyResponse model = new ClassifyResponse();
 
@@ -448,8 +450,6 @@ namespace WatsonServices.Services
             {
                 try
                 {
-                    byte[] fileBytes = File.ReadAllBytes(imageFile);
-
                     var requestString = "api/v3/recognize_text";
 
                     // add API key
@@ -457,7 +457,7 @@ namespace WatsonServices.Services
                     // add API version
                     requestString += "&version=" + VersionReleaseDate;
 
-                    HttpContent imageContent = GetHttpContentFromImage(Path.GetFileName(imageFile), File.ReadAllBytes(imageFile));
+                    HttpContent imageContent = GetHttpContentFromImage(imageFileName, imageFileContents);
                     var request = CreateFileUploadRequest(imageContent);
 
                     // send a POST request to the AlchemyAPI service
@@ -516,6 +516,11 @@ namespace WatsonServices.Services
 
         public async Task<ClassifyResponse> RecognizeFacesAsync(string imageFilePath, string url = null)
         {
+            return await RecognizeFacesAsync(Path.GetFileName(imageFilePath), File.ReadAllBytes(imageFilePath), url);
+        }
+
+        public async Task<ClassifyResponse> RecognizeFacesAsync(string imageFileName, byte[] imageFileContents, string url = null)
+        {
             ClassifyResponse model = new ClassifyResponse();
 
             // Create an HttpClient to make the request using VrClient()
@@ -533,7 +538,7 @@ namespace WatsonServices.Services
                     // add url to request parameters
                     ClassifyParameters parameters = new ClassifyParameters() { Url = url };
 
-                    HttpContent imageContent = GetHttpContentFromImage(Path.GetFileName(imageFilePath), File.ReadAllBytes(imageFilePath));
+                    HttpContent imageContent = GetHttpContentFromImage(imageFileName, imageFileContents);
                     var request = CreateFileUploadRequest(GetHttpContentFromParameters(parameters), imageContent);
 
                     // send a POST request to the Visual Recognition service
