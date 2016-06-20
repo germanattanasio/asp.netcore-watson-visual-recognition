@@ -12,5 +12,11 @@
 *.xproj text eol=crlf
 *.yml text eol=crlf
 
+*.gif binary
 *.png binary
 *.jpg binary
+*.svg binary
+*.woff binary
+*.zip binary
+*.ttf binary
+*.eot binary
