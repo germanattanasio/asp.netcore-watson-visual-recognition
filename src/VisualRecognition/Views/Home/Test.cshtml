@@ -1,259 +1,57 @@
-﻿@{
+﻿@model VisualRecognition.ViewModels.TestClassifierViewModel
+@{
     ViewBag.Title = "Visual Recognition Demo";
     Layout = "_Layout";
 }
-<div class="_demo--container">
-    <article class="_content base--article">
-    <div role="tabpanel" class="tab-panels tab-views">
-        <ul role="tablist" class="tab-panels--tab-list tab-views--tab-list">
-        <li role="presentation" class="tab-panels--tab-list-item tab-views--tab-list-item base--li">
-            <a href="/" aria-controls="panel1" role="tab" class="tab-panels--tab tab-views--tab">Try out</a>
-            </li>
-        <li role="presentation" class="tab-panels--tab-list-item tab-views--tab-list-item base--li">
-            <a href="/train" aria-controls="panel2" role="tab" class="tab-panels--tab tab-views--tab">Train</a>
-            </li>
-        <li role="presentation" class="tab-panels--tab-list-item tab-views--tab-list-item base--li">
-            <a href="/test" aria-controls="panel3" role="tab" class="tab-panels--tab tab-views--tab active">Test</a>
-            </li>
-        </ul>
-        <div class="tab-panels--tab-content">
-        <h2 class="base--h2 test--classifier-name"></h2>
-        <hr class="base--hr test--hr" />
+<div class="tab-panels tab-views" role="tabpanel">
+    <ul class="tab-panels--tab-list tab-views--tab-list" role="tablist">
+        <li class="tab-panels--tab-list-item tab-views--tab-list-item base--li" role="presentation">
+            <a class="tab-panels--tab tab-views--tab" href="/" aria-controls="panel1" role="tab">Try</a>
+        </li>
+        <li class="tab-panels--tab-list-item tab-views--tab-list-item base--li" role="presentation">
+            <a class="tab-panels--tab tab-views--tab" href="/train" aria-controls="panel2" role="tab">Train</a>
+        </li>
+        <li class="tab-panels--tab-list-item tab-views--tab-list-item base--li" role="presentation">
+            <a class="tab-panels--tab tab-views--tab active" href="/test" aria-controls="panel3" role="tab">Test</a>
+        </li>
+    </ul>
+    <div class="tab-panels--tab-content">
+        <h2 class="base--h2 test--classifier-name">@Model.ClassifierName</h2>
+        <div>Test your newly trained demo classifier with a similar image (max 2mb) that was not in the training set.</div>
         <div class="test--input-container toggled">
             <h3 class="base--h3 test--header">Test your classifier</h3>
-            <i class="test--classifier-images-arrow icon icon-down-arrow"></i>
-            <form id="test--fileupload" data-upload-template-id="template-upload-test" class="test--form">
-            <div class="test--example-images test--example-images_default">
-                <input id="test--image0_default" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image0_default" class="test--example-thumb square">
-                <img src="images/samples/1.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image1_default" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image1_default" class="test--example-thumb square">
-                <img src="images/samples/2.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image2_default" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image2_default" class="test--example-thumb square">
-                <img src="images/samples/3.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image3_default" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image3_default" class="test--example-thumb square">
-                <img src="images/samples/4.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image4_default" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image4_default" class="test--example-thumb square">
-                <img src="images/samples/5.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image5_default" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image5_default" class="test--example-thumb square">
-                <img src="images/samples/6.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
+            <form id="test--fileupload" class="test--form test--dropzone" data-upload-template-id="template-upload-test">
+                <input id="classifier_id" type="hidden" name="classifier_id" value="" />
+                <div class="test--example-images test--example-images_@Model.Samples.BundleId">
+                    @Html.Partial("_SampleImages", Model.Samples)
                 </div>
-            <div class="test--example-images test--example-images_car_vs_truck">
-                <input id="test--image0_car_vs_truck" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image0_car_vs_truck" class="test--example-thumb square">
-                <img src="images/datasets/car_vs_truck/test/0.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image1_car_vs_truck" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image1_car_vs_truck" class="test--example-thumb square">
-                <img src="images/datasets/car_vs_truck/test/1.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image2_car_vs_truck" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image2_car_vs_truck" class="test--example-thumb square">
-                <img src="images/datasets/car_vs_truck/test/2.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image3_car_vs_truck" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image3_car_vs_truck" class="test--example-thumb square">
-                <img src="images/datasets/car_vs_truck/test/3.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image4_car_vs_truck" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image4_car_vs_truck" class="test--example-thumb square">
-                <img src="images/datasets/car_vs_truck/test/4.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image5_car_vs_truck" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image5_car_vs_truck" class="test--example-thumb square">
-                <img src="images/datasets/car_vs_truck/test/5.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                </div>
-            <div class="test--example-images test--example-images_pizza_vs_spaghetti">
-                <input id="test--image0_pizza_vs_spaghetti" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image0_pizza_vs_spaghetti" class="test--example-thumb square">
-                <img src="images/datasets/pizza_vs_spaghetti/test/0.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image1_pizza_vs_spaghetti" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image1_pizza_vs_spaghetti" class="test--example-thumb square">
-                <img src="images/datasets/pizza_vs_spaghetti/test/1.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image2_pizza_vs_spaghetti" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image2_pizza_vs_spaghetti" class="test--example-thumb square">
-                <img src="images/datasets/pizza_vs_spaghetti/test/2.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image3_pizza_vs_spaghetti" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image3_pizza_vs_spaghetti" class="test--example-thumb square">
-                <img src="images/datasets/pizza_vs_spaghetti/test/3.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image4_pizza_vs_spaghetti" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image4_pizza_vs_spaghetti" class="test--example-thumb square">
-                <img src="images/datasets/pizza_vs_spaghetti/test/4.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image5_pizza_vs_spaghetti" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image5_pizza_vs_spaghetti" class="test--example-thumb square">
-                <img src="images/datasets/pizza_vs_spaghetti/test/5.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                </div>
-            <div class="test--example-images test--example-images_golden_retrievers_vs_dogs">
-                <input id="test--image0_golden_retrievers_vs_dogs" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image0_golden_retrievers_vs_dogs" class="test--example-thumb square">
-                <img src="images/datasets/golden_retrievers_vs_dogs/test/0.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image1_golden_retrievers_vs_dogs" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image1_golden_retrievers_vs_dogs" class="test--example-thumb square">
-                <img src="images/datasets/golden_retrievers_vs_dogs/test/1.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image2_golden_retrievers_vs_dogs" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image2_golden_retrievers_vs_dogs" class="test--example-thumb square">
-                <img src="images/datasets/golden_retrievers_vs_dogs/test/2.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image3_golden_retrievers_vs_dogs" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image3_golden_retrievers_vs_dogs" class="test--example-thumb square">
-                <img src="images/datasets/golden_retrievers_vs_dogs/test/3.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image4_golden_retrievers_vs_dogs" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image4_golden_retrievers_vs_dogs" class="test--example-thumb square">
-                <img src="images/datasets/golden_retrievers_vs_dogs/test/4.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image5_golden_retrievers_vs_dogs" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image5_golden_retrievers_vs_dogs" class="test--example-thumb square">
-                <img src="images/datasets/golden_retrievers_vs_dogs/test/5.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                </div>
-            <div class="test--example-images test--example-images_baseball_vs_cricket">
-                <input id="test--image0_baseball_vs_cricket" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image0_baseball_vs_cricket" class="test--example-thumb square">
-                <img src="images/datasets/baseball_vs_cricket/test/0.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image1_baseball_vs_cricket" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image1_baseball_vs_cricket" class="test--example-thumb square">
-                <img src="images/datasets/baseball_vs_cricket/test/1.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image2_baseball_vs_cricket" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image2_baseball_vs_cricket" class="test--example-thumb square">
-                <img src="images/datasets/baseball_vs_cricket/test/2.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image3_baseball_vs_cricket" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image3_baseball_vs_cricket" class="test--example-thumb square">
-                <img src="images/datasets/baseball_vs_cricket/test/3.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image4_baseball_vs_cricket" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image4_baseball_vs_cricket" class="test--example-thumb square">
-                <img src="images/datasets/baseball_vs_cricket/test/4.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                <input id="test--image5_baseball_vs_cricket" type="radio" name="test--example-images" value="someImage" class="test--example-radio" />
-                <label for="test--image5_baseball_vs_cricket" class="test--example-thumb square">
-                <img src="images/datasets/baseball_vs_cricket/test/5.jpg" class="test--example-image" />
-                <div class="test--example-image-overlay"></div>
-                </label>
-                </div>
-            <div class="test--dropzone">
-                <label for="test--file" class="test--file-input-button base--button">
-                <span class="base--a">Select an image</span> or drag from your computer
-                </label>
-                <input id="test--file" type="file" name="images_file" accept="image/x-png, image/jpg, image/gif, image/jpeg, image/png" title="Choose an image to upload" class="test--file-input" />
-                </div>
-            <div class="test--url">
-                <div class="test--invalid-url">Invalid URL</div>
-                <div class="test--invalid-image-url">The URL must end with .JPG, .GIF, or .PNG.</div>
-                <input type="text" placeholder="Paste image URL here" name="url" class="test--url-input base--input" />
-                <input type="hidden" name="image_data" class="test--image-data-input base--input" />
+                <div class="test--url">
+                    <div class="test--invalid-url" style="display:none">Invalid URL</div>
+                    <div class="test--invalid-image-url" style="display:none">The URL must end with .JPG, .GIF, or .PNG.</div>
+                    <input class="test--url-input base--input" type="text" placeholder="Or paste an image URL" name="url" />
+                    <input class="test--image-data-input base--input" type="hidden" name="image_data" />
                 </div>
             </form>
-            </div>
-        <hr class="base--hr test--hr" />
-        <div class="test--classifier-images-container">
-            <div class="test--classifier-images-toggle">
-            <h3 class="test--classifier-images-title base--h3">Show your trained images</h3>
-            <i class="test--classifier-images-arrow icon icon-down-arrow"></i>
-            <div class="test--classifier-images">
-                <div class="test--classifier-images-left">
-                <h3 class="base--h3 test--classifier-images-header">Positive Images</h3>
-                <div class="test--classifier-images-thumbs test--classifier-images-thumbs_positive"></div>
-                </div>
-                <div class="test--classifier-images-right">
-                <h3 class="base--h3 test--classifier-images-header">Negative Images</h3>
-                <div class="test--classifier-images-thumbs test--classifier-images-thumbs_negative"></div>
-                </div>
-                </div>
-            </div>
-            <hr class="base--hr test--hr" />
-            </div>
+        </div>
         <div class="loading test--loading">
-            <img src="images/loading-indicator.gif" class="test--loading-image loading--image" />
+            <img class="test--loading-image loading--image" src="~/images/loading-indicator.gif" />
             <p class="base--p test--loading-message loading--message">Visual Recognition is classifying the image to determine a match...</p>
-            </div>
+        </div>
         <div class="error test--error">
-            <img src="images/icons/alert.svg" class="test--error-image error--image" />
+            <img class="test--error-image error--image" src="~/images/icons/alert.svg" />
             <p class="base--p test--error-message error--message">Visual Recognition is not available right now...</p>
-            </div>
+        </div>
         <div class="test--output">
+            <hr class="base--hr test--hr" />
             <h2 class="base--h2 test--output-header">Results</h2>
             <div class="test--output-row">
-            <div class="test--output-left">
-                <div class="test--output-image-container">
-                <img class="test--output-image" />
+                <div class="test--output-left">
+                    <div class="test--output-image-container">
+                        <img class="test--output-image" />
+                    </div>
                 </div>
-                </div>
-            <div class="test--output-right">
-                <table class="base--table test--output-table">
-                <thead class="base--thead test--output-thead">
-                    <tr class="base--tr test--output-tr">
-                    <td class="base--td test--output-td">
-                        <a href="https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/visual-recognition/overview.shtml" target="_blank" class="base--a">Classifier</a>
-                        </td>
-                    <td class="base--td test--output-td">
-                        <a href="https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/visual-recognition/overview.shtml" target="_blank" class="base--a">Confidence Score</a>
-                        </td>
-                    </tr>
-                    </thead>
-                <tbody class="test--output-tbody"></tbody>
-                </table>
-                </div>
-            </div>
+                <div class="test--output-right test--output-data"></div>
             </div>
         </div>
-        </div>
-    </article>
+    </div>
 </div>
-@section scripts {
-    <script src="~/js/demo.js"></script>
-    <script src="~/js/use.js"></script>
-    <script src="~/js/train.js"></script>
-}

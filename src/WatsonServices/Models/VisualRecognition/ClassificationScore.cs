@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace WatsonServices.Models.VisualRecognition
 {
@@ -8,7 +9,12 @@ namespace WatsonServices.Models.VisualRecognition
         public string ClassifierId { get; set; }
         [JsonProperty("name")]
         public string ClassifierName { get; set; }
-        [JsonProperty("score")]
-        public double Score { get; set; }
+        [JsonProperty("classes")]
+        public ICollection<ClassResult> ClassResults { get; set; }
+
+        public ClassificationScore()
+        {
+            ClassResults = new ClassResult[0];
+        }
     }
 }

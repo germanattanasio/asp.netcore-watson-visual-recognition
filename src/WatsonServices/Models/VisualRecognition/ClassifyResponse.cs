@@ -4,12 +4,11 @@ namespace WatsonServices.Models.VisualRecognition
 {
     public class ClassifyResponse
     {
-        [JsonProperty("images")]
+        [JsonProperty("images", NullValueHandling = NullValueHandling.Ignore)]
         public Image[] Images { get; set; }
-
-        public ClassifyResponse()
-        {
-            Images = new Image[0];
-        }
+        [JsonProperty("images_processed", NullValueHandling = NullValueHandling.Ignore)]
+        public int ImagesProcessed { get; set; }
+        [JsonProperty("error", NullValueHandling = NullValueHandling.Ignore)]
+        public ErrorResponse Error { get; set; }
     }
 }

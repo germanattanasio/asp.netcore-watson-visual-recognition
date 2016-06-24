@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -12,25 +12,33 @@ namespace VisualRecognition.ViewModels
 {
     public class ClassifyImageViewModelBinder : IModelBinder
     {
-        public async Task<ModelBindingResult> BindModelAsync(ModelBindingContext bindingContext)
+        private const string CookiesClassifierKey = "classifier";
+        private const string ImageDataKey = "image_data";
+        private const string UseImageSetKey = "use--example-images";
+        private const string TestImageSetKey = "test--example-images";
+        private const string UrlKey = "url";
+
+        public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
             if (bindingContext.ModelType != typeof(ClassifyImageViewModel))
             {
-                return ModelBindingResult.NoResult;
+                bindingContext.Result = null;
+                return;
             }
 
             var result = new ClassifyImageViewModel();
 
             try
             {
-                result.ImageData = (string)bindingContext.ValueProvider.GetValue("image_data");
-                result.ImageSet = (string)bindingContext.ValueProvider.GetValue("use--example-images");
-                result.Url = (string)bindingContext.ValueProvider.GetValue("url");
+                result.ImageData = (string)bindingContext.ValueProvider.GetValue(ImageDataKey);
+                result.ImageSet = ((string)bindingContext.ValueProvider.GetValue(UseImageSetKey)) ??
+                    ((string)bindingContext.ValueProvider.GetValue(TestImageSetKey));
+                result.Url = (string)bindingContext.ValueProvider.GetValue(UrlKey);
 
                 Uri imageUri;
                 string fileExt = "";
-                bool isUri = Uri.TryCreate(result.Url, UriKind.Absolute, out imageUri);
-                if (isUri)
+                result.IsUrl = Uri.TryCreate(result.Url, UriKind.Absolute, out imageUri);
+                if (result.IsUrl)
                 {
                     // download the file
                     using (var client = new HttpClient())
@@ -39,7 +47,8 @@ namespace VisualRecognition.ViewModels
                         if (!response.IsSuccessStatusCode)
                         {
                             // return 400 status
-                            return ModelBindingResult.Failed("url");
+                            bindingContext.Result = ModelBindingResult.Failed("url");
+                            return;
                         }
 
                         fileExt = Path.GetExtension(result.Url);
@@ -53,7 +62,7 @@ namespace VisualRecognition.ViewModels
                     {
                         fileExt = Path.GetExtension(result.Url);
                         var hostingEnvironmentService = (IHostingEnvironment)bindingContext.OperationBindingContext
-                            .HttpContext.ApplicationServices.GetService(typeof(IHostingEnvironment));
+                            .HttpContext.RequestServices.GetService(typeof(IHostingEnvironment));
 
                         result.ImageByteContent = File.ReadAllBytes(
                             Path.Combine(hostingEnvironmentService.WebRootPath, result.Url));
@@ -70,7 +79,7 @@ namespace VisualRecognition.ViewModels
                     try
                     {
                         var fileEncoderService = (IFileEncoderService)bindingContext.OperationBindingContext.HttpContext
-                            .ApplicationServices.GetService(typeof(IFileEncoderService));
+                            .RequestServices.GetService(typeof(IFileEncoderService));
 
                         string[] encodedFileParts = result.ImageData.Split(';');
                         encodedFile = encodedFileParts[1].Split(',')[1];
@@ -91,13 +100,16 @@ namespace VisualRecognition.ViewModels
             catch (Exception ex)
             {
                 Console.WriteLine(ex.StackTrace);
-                return ModelBindingResult.Failed(bindingContext.FieldName);
+                bindingContext.Result = ModelBindingResult.Failed(bindingContext.FieldName);
+                return;
             }
 
             try
             {
-                string classifierJson = bindingContext.OperationBindingContext.HttpContext.Request.Cookies["classifier"];
-                if (classifierJson != null)
+                string classifierJson = bindingContext.OperationBindingContext.HttpContext.Request.Cookies[CookiesClassifierKey];
+                // only use this classifier if we're looking at test images
+                if (classifierJson != null &&
+                    !string.IsNullOrEmpty(((string)bindingContext.ValueProvider.GetValue(TestImageSetKey))))
                 {
                     result.Classifier = ClassifierMapper.Map(
                         Newtonsoft.Json.JsonConvert.DeserializeObject<Classifier>(classifierJson));
@@ -108,7 +120,8 @@ namespace VisualRecognition.ViewModels
                 Console.WriteLine(ex.StackTrace);
             }
 
-            return ModelBindingResult.Success(bindingContext.FieldName, result);
+            bindingContext.Result = ModelBindingResult.Success(bindingContext.FieldName, result);
+            return;
         }
     }
 }

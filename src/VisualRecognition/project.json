@@ -1,28 +1,58 @@
 {
-  "webroot": "wwwroot",
+  "buildOptions": {
+    "copyToOutput": {
+      "include": [
+        "**.cshtml",
+        "vcap_services.json",
+        "wwwroot"
+      ],
+      "exclude": [ "bin", "obj" ]
+    },
+    "debugType": "portable",
+    "emitEntryPoint": true,
+    "preserveCompilationContext": true
+  },
   "dependencies": {
-    "Microsoft.AspNet.Diagnostics": "1.0.0-rc1-final",
-    "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
-    "Microsoft.AspNet.Server.Kestrel": "1.0.0-rc1-final",
-    "Microsoft.AspNet.StaticFiles": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Configuration": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
-    "System.IO.Compression.ZipFile": "4.0.0",
+    "Microsoft.AspNetCore.Diagnostics": "1.0.0-rc2-final",
+    "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final",
+    "Microsoft.AspNetCore.Server.Kestrel": "1.0.0-rc2-final",
+    "Microsoft.AspNetCore.StaticFiles": "1.0.0-rc2-final",
+    "Microsoft.Extensions.Configuration": "1.0.0-rc2-final",
+    "Microsoft.Extensions.Configuration.CommandLine": "1.0.0-rc2-final",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-rc2-final",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0-rc2-final",
+    "Microsoft.Extensions.Configuration.Abstractions": "1.0.0-rc2-final",
+    "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0-rc2-final",
+    "System.IO.Compression.ZipFile": "4.0.1-rc2-24027",
     "WatsonServices": "1.0.0"
   },
-  "commands": {
-    "kestrel": "Microsoft.AspNet.Server.Kestrel",
-    "web": "Microsoft.AspNet.Server.Kestrel"
-  },
   "frameworks": {
-    "dnxcore50": {}
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0-rc2-3002702"
+        }
+      },
+      "imports": [
+        "dnxcore50",
+        "netcore45",
+        "portable-net45+netcore45+wp8+wp81+wpa81"
+      ]
+    }
   },
-  "exclude": [
-    "wwwroot"
-  ],
-  "publishExclude": [
-    "**.xproj",
-    "**.user",
-    "**.vspscc"
-  ]
+  "publishOptions": {
+    "include": [
+      "**.cshtml",
+      "wwwroot"
+    ],
+    "exclude": [
+      "**.xproj",
+      "**.user",
+      "**.vspscc",
+      "bin",
+      "obj"
+    ]
+  },
+  "version": "1.0.0-rc2-final"
 }

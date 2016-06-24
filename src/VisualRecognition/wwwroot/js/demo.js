@@ -14,13 +14,47 @@
  * limitations under the License.
  */
 
- /* global $:false, setupUse */
+ /* global $:false */
 'use strict';
+
+/**
+ * Returns the next hour as Date
+ * @return {Date} the next hour
+ */
+module.exports.nextHour = function nextHour() {
+  var oneHour = new Date();
+  oneHour.setHours(oneHour.getHours() + 1);
+  return oneHour;
+};
+
+/**
+ * Resizes an image
+ * @param  {String} image   The base64 image
+ * @param  {int} maxSize maximum size
+ * @return {String}         The base64 resized image
+ */
+module.exports.resize = function(image, maxSize) {
+  var c = window.document.createElement('canvas');
+  var ctx = c.getContext('2d');
+  var ratio = image.width / image.height;
+
+  if (image.width < maxSize && image.height < maxSize) {
+    c.width = image.width;
+    c.height = image.height;
+  } else {
+    c.width = (ratio > 1 ? maxSize : maxSize * ratio);
+    c.height = (ratio > 1 ? maxSize / ratio : maxSize);
+  }
+
+  ctx.drawImage(image, 0, 0, c.width, c.height);
+  return c.toDataURL('image/jpeg');
+};
 
 // if image is landscape, tag it
 function addLandscape(imgElement) {
-  if (imgElement.height < imgElement.width)
+  if (imgElement.height < imgElement.width) {
     imgElement.classList.add('landscape');
+  }
 }
 
 // attach landscape class on image load event
@@ -28,8 +62,9 @@ function landscapify(imgSelector) {
   $(imgSelector).on('load', function() {
     addLandscape(this);
   }).each(function() {
-    if (this.complete)
+    if (this.complete) {
       $(this).load();
+    }
   });
 }
 
@@ -44,21 +79,22 @@ function imageFadeIn(imgSelector) {
   $(imgSelector).on('load', function() {
     $(this).addClass('loaded');
   }).each(function() {
-    if (this.complete)
+    if (this.complete) {
       $(this).load();
+    }
   });
 }
 
 /**
  * scroll animation to element on page
- * @param  {$element}  Jquery element
+ * @param  {Object}  element Jquery element
  * @return {void}
  */
-function scrollToElement(element) {
+module.exports.scrollToElement = function scrollToElement(element) {
   $('html, body').animate({
     scrollTop: element.offset().top
   }, 300);
-}
+};
 
 /**
  * Returns the current page
@@ -68,37 +104,9 @@ function currentPage() {
   var href = $(window.location).attr('href');
   return href.substr(href.lastIndexOf('/'));
 }
+module.exports.currentPage = currentPage;
 
-/**
- * Returns the next hour as Date
- * @return {Date} the next hour
- */
-function nextHour() {
-  var oneHour = new Date();
-  oneHour.setHours(oneHour.getHours() + 1);
-  return oneHour;
-}
-
-/**
- * Resizes an image
- * @param  {String} image   The base64 image
- * @param  {int} maxSize maximum size
- * @return {String}         The base64 resized image
- */
-function resize(image, maxSize) {
-  var c = window.document.createElement('canvas'),
-    ctx = c.getContext('2d'),
-    ratio = image.width / image.height;
-
-  c.width = (ratio > 1 ? maxSize : maxSize * ratio);
-  c.height = (ratio > 1 ? maxSize / ratio : maxSize);
-
-  ctx.drawImage(image, 0, 0, c.width, c.height);
-  return c.toDataURL('image/jpeg');
-}
-
-$(document).ready(function () {
-
+$(document).ready(function() {
   // tagging which images are landscape
   landscapify('.use--example-image');
   landscapify('.use--output-image');
@@ -111,14 +119,15 @@ $(document).ready(function () {
 
   $(window).resize(square);
 
-  //tab listener
-  $('.tab-panels--tab').click(function(e){
+  // tab listener
+  $('.tab-panels--tab').click(function(e) {
     e.preventDefault();
     if (!$(this).hasClass('disabled')) {
       var self = $(this);
       var newPanel = self.attr('href');
-      if (newPanel !== currentPage())
+      if (newPanel !== currentPage()) {
         window.location = newPanel;
+      }
     }
   });
 

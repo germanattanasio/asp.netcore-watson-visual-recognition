@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace VisualRecognition.ViewModels
 {
@@ -8,7 +9,12 @@ namespace VisualRecognition.ViewModels
         public string ClassifierId { get; set; }
         [JsonProperty("name")]
         public string ClassifierName { get; set; }
-        [JsonProperty("score")]
-        public string Score { get; set; }
+        [JsonProperty("classes")]
+        public ICollection<ClassResultViewModel> ClassResults { get; set; }
+
+        public ClassificationScoreViewModel()
+        {
+            ClassResults = new ClassResultViewModel[0];
+        }
     }
 }

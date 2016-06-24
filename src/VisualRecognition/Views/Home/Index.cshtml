@@ -1,116 +1,62 @@
-﻿@{
+﻿@model VisualRecognition.ViewModels.SampleImagesViewModel
+@{
     ViewBag.Title = "Visual Recognition Demo";
     Layout = "_Layout";
 }
-<div class="_demo--container">
-    <article class="_content base--article">
-        <div role="tabpanel" class="tab-panels tab-views">
-            <ul role="tablist" class="tab-panels--tab-list tab-views--tab-list">
-                <li role="presentation" class="tab-panels--tab-list-item tab-views--tab-list-item base--li">
-                    <a href="/" aria-controls="panel1" role="tab" class="tab-panels--tab tab-views--tab active">Try out</a>
-                </li>
-                <li role="presentation" class="tab-panels--tab-list-item tab-views--tab-list-item base--li">
-                    <a href="/train" aria-controls="panel2" role="tab" class="tab-panels--tab tab-views--tab">Train</a>
-                </li>
-                <li role="presentation" class="tab-panels--tab-list-item tab-views--tab-list-item base--li">
-                    <a href="/test" aria-controls="panel3" role="tab" class="tab-panels--tab tab-views--tab disabled">Test</a>
-                </li>
-            </ul>
-            <div class="tab-panels--tab-content">
-                <h2 class="base--h2 use--header">Select an Image</h2>
-                <form id="use--fileupload" data-upload-template-id="template-upload-use" class="use--form">
-                    <div class="use--example-images use--example-images_default">
-                        <input id="use--image0_default" name="use--example-images" value="someImage" class="use--example-radio" type="radio" />
-                        <label style="height: 108.417px;" for="use--image0_default" class="use--example-thumb square">
-                            <img src="images/samples/1.jpg" class="use--example-image landscape loaded" />
-                            <div class="use--example-image-overlay"></div>
-                        </label>
-                        <input id="use--image1_default" name="use--example-images" value="someImage" class="use--example-radio" type="radio" />
-                        <label style="height: 108.417px;" for="use--image1_default" class="use--example-thumb square">
-                            <img src="images/samples/2.jpg" class="use--example-image landscape loaded" />
-                            <div class="use--example-image-overlay"></div>
-                        </label>
-                        <input id="use--image2_default" name="use--example-images" value="someImage" class="use--example-radio" type="radio" />
-                        <label style="height: 108.417px;" for="use--image2_default" class="use--example-thumb square">
-                            <img src="images/samples/3.jpg" class="use--example-image landscape loaded" />
-                            <div class="use--example-image-overlay"></div>
-                        </label>
-                        <input id="use--image3_default" name="use--example-images" value="someImage" class="use--example-radio" type="radio" />
-                        <label style="height: 108.417px;" for="use--image3_default" class="use--example-thumb square">
-                            <img src="images/samples/4.jpg" class="use--example-image loaded" />
-                            <div class="use--example-image-overlay"></div>
-                        </label>
-                        <input id="use--image4_default" name="use--example-images" value="someImage" class="use--example-radio" type="radio" />
-                        <label style="height: 108.417px;" for="use--image4_default" class="use--example-thumb square">
-                            <img src="images/samples/5.jpg" class="use--example-image landscape loaded" />
-                            <div class="use--example-image-overlay"></div>
-                        </label>
-                        <input id="use--image5_default" name="use--example-images" value="someImage" class="use--example-radio" type="radio" />
-                        <label style="height: 108.417px;" for="use--image5_default" class="use--example-thumb square">
-                            <img src="images/samples/6.jpg" class="use--example-image landscape loaded" />
-                            <div class="use--example-image-overlay"></div>
-                        </label>
-                    </div>
-                    <div class="use--dropzone">
-                        <label for="use--file" class="use--file-input-button base--button">
-                            <span class="base--a">Select an image</span> or drag from your computer
-                        </label>
-                        <input id="use--file" name="images_file" accept="image/x-png, image/jpg, image/gif, image/jpeg, image/png" title="Choose an image to upload" class="use--file-input" type="file">
-                    </div>
-                    <div class="use--url">
-                        <div style="display: none;" class="use--invalid-url">Invalid URL</div>
-                        <div style="display: none;" class="use--invalid-image-url">The URL must end with .JPG, .GIF, or .PNG.</div>
-                        <input placeholder="Paste image URL here" name="url" class="use--url-input base--input" type="text">
-                        <input name="image_data" class="use--image-data-input base--input" type="hidden">
-                    </div>
-                </form>
-                <div style="display: none;" class="loading use--loading">
-                    <img src="images/loading-indicator.gif" class="use--loading-image loading--image">
-                    <p class="base--p use--loading-message loading--message">Watson is classifying the image to determine a match...</p>
-                </div>
-                <div style="display: none;" class="error use--error">
-                    <img src="images/icons/alert.svg" class="use--error-image error--image">
-                    <p class="base--p use--error-message error--message">Visual Recognition is not available right now...</p>
-                </div>
-                <div style="display: none;" class="use--output">
-                    <hr class="base--hr use--hr">
-                    <h2 class="base--h2 use--output-header">Results</h2>
-                    <div class="use--output-row">
-                        <div class="use--output-left">
-                            <div class="use--output-image-container">
-                                <img class="use--output-image">
-                            </div>
-                        </div>
-                        <div class="use--output-right">
-                            <table class="base--table use--output-table">
-                                <thead class="base--thead use--output-thead">
-                                    <tr class="base--tr use--output-tr">
-                                        <td class="base--td use--output-td">
-                                            <a href="https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/visual-recognition/overview.shtml" target="_blank" class="base--a">Classifier</a>
-                                        </td>
-                                        <td class="base--td use--output-td">
-                                            <a href="https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/visual-recognition/overview.shtml" target="_blank" class="base--a">Confidence Score</a>
-                                        </td>
-                                    </tr>
-                                </thead>
-                                <tbody class="use--output-tbody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="use--output-note">Powered by <a href="http://www.alchemyapi.com/products/alchemyvision" target="_blank" class="base--a">AlchemyVision</a></div>
-                    <hr class="base--hr use--hr">
-                    <div class="use--output-row">
-                        <a href="/train">
-                            <button class="base--button use--train-button">Create a custom classifier</button>
-                        </a>
-                    </div>
+<div class="tab-panels tab-views" role="tabpanel">
+    <ul class="tab-panels--tab-list tab-views--tab-list" role="tablist">
+        <li class="tab-panels--tab-list-item tab-views--tab-list-item base--li" role="presentation">
+            <a class="tab-panels--tab tab-views--tab active" href="/" aria-controls="panel1" role="tab">Try</a>
+        </li>
+        <li class="tab-panels--tab-list-item tab-views--tab-list-item base--li" role="presentation">
+            <a class="tab-panels--tab tab-views--tab" href="/train" aria-controls="panel2" role="tab">Train</a>
+        </li>
+        <li class="tab-panels--tab-list-item tab-views--tab-list-item base--li" role="presentation">
+            <a class="tab-panels--tab tab-views--tab disabled" href="/test" aria-controls="panel3" role="tab">Test</a>
+        </li>
+    </ul>
+    <div class="tab-panels--tab-content">
+        <h2 class="base--h2 use--header">Try the service</h2>
+        <div>Choose a sample image or upload your own image (max 2mb) to try out Visual Recognition.</div>
+        <form id="use--fileupload" class="use--form use--dropzone" data-upload-template-id="template-upload-use">
+            <input id="classifier_id" type="hidden" name="classifier_id" value="" />
+            <div class="use--example-images use--example-images_default">
+                @Html.Partial("_SampleImages", Model)
+                <div style="height: 115.8px;" class="use--dropzone square">
+                    <label for="use--file" class="use--file-input-button base--button">
+                        <div class="use--file-input-button-big-plus">+</div>
+                        <span class="base--a">Select</span> or drag your own image
+                    </label>
+                    <input id="use--file" name="images_file" accept="image/x-png, image/jpg, image/gif, image/jpeg, image/png" title="Choose an image to upload" class="use--file-input" type="file">
                 </div>
             </div>
+            <div class="use--url">
+                <div style="display: none" class="use--invalid-url">Invalid URL</div>
+                <div style="display:none" class="use--invalid-image-url">The URL must end with .JPG, .GIF, or .PNG.</div>
+                <input placeholder="Or paste an image URL" name="url" class="use--url-input base--input" type="text" />
+                <input name="image_data" class="use--image-data-input base--input" type="hidden" />
+            </div>
+        </form>
+        <div style="display:none" class="loading use--loading">
+            <img src="~/images/loading-indicator.gif" class="use--loading-image loading--image" />
+            <p class="base--p use--loading-message loading--message">Watson is classifying the image to determine a match...</p>
         </div>
-    </article>
+        <div style="display:none" class="error use--error">
+            <img src="~/images/icons/alert.svg" class="use--error-image error--image" />
+            <p class="base--p use--error-message error--message">Visual Recognition is not available right now...</p>
+        </div>
+        <div style="display:none" class="use--output">
+            <hr class="base--hr use--hr" />
+            <h2 class="base--h2 use--output-header">Results</h2>
+            <div class="use--output-row">
+                <div class="use--output-data"></div>
+            </div>
+            <hr class="base--hr use--hr" />
+            <div class="use--output-row">
+                <a href="/train" class="base--a">
+                    <button class="base--button use--train-button">Create a custom classifier</button>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
-@section scripts {
-    <script src="~/js/demo.js"></script>
-    <script src="~/js/use.js"></script>
-    <script src="~/js/train.js"></script>
-}

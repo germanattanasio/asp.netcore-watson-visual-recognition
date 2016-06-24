@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNet.Http;
+﻿using System.Collections.Generic;
 
 namespace VisualRecognition.ViewModels
 {
     public class CreateClassifierViewModel
     {
-        public string[] Negatives { get; set; }
-        public string[] Positives { get; set; }
+        public IList<string> Bundles { get; set; }
+        public string[] Names { get; set; }
+        public string Kind { get; set; }
         public string Name { get; set; }
     }
 }

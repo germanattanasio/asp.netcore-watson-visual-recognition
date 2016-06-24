@@ -2,11 +2,12 @@
 .vs/
 artifacts/
 bin/
+obj/
 *.sln
 *.xproj
 *.xproj.user
 README.md
 project.lock.json
 Properties/
-src/VisualRecognition/config.json
+vcap_services.json
 temp_files/
