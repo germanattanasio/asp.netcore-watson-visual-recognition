@@ -22,7 +22,7 @@ namespace VisualRecognition.ViewModels
         {
             if (bindingContext.ModelType != typeof(ClassifyImageViewModel))
             {
-                bindingContext.Result = null;
+                bindingContext.Result = ModelBindingResult.Failed();
                 return;
             }
 
@@ -47,7 +47,7 @@ namespace VisualRecognition.ViewModels
                         if (!response.IsSuccessStatusCode)
                         {
                             // return 400 status
-                            bindingContext.Result = ModelBindingResult.Failed("url");
+                            bindingContext.Result = ModelBindingResult.Failed();
                             return;
                         }
 
@@ -61,7 +61,7 @@ namespace VisualRecognition.ViewModels
                     try
                     {
                         fileExt = Path.GetExtension(result.Url);
-                        var hostingEnvironmentService = (IHostingEnvironment)bindingContext.OperationBindingContext
+                        var hostingEnvironmentService = (IHostingEnvironment)bindingContext
                             .HttpContext.RequestServices.GetService(typeof(IHostingEnvironment));
 
                         result.ImageByteContent = File.ReadAllBytes(
@@ -78,7 +78,7 @@ namespace VisualRecognition.ViewModels
                     string encodedFile = "";
                     try
                     {
-                        var fileEncoderService = (IFileEncoderService)bindingContext.OperationBindingContext.HttpContext
+                        var fileEncoderService = (IFileEncoderService)bindingContext.HttpContext
                             .RequestServices.GetService(typeof(IFileEncoderService));
 
                         string[] encodedFileParts = result.ImageData.Split(';');
@@ -100,13 +100,13 @@ namespace VisualRecognition.ViewModels
             catch (Exception ex)
             {
                 Console.WriteLine(ex.StackTrace);
-                bindingContext.Result = ModelBindingResult.Failed(bindingContext.FieldName);
+                bindingContext.Result = ModelBindingResult.Failed();
                 return;
             }
 
             try
             {
-                string classifierJson = bindingContext.OperationBindingContext.HttpContext.Request.Cookies[CookiesClassifierKey];
+                string classifierJson = bindingContext.HttpContext.Request.Cookies[CookiesClassifierKey];
                 // only use this classifier if we're looking at test images
                 if (classifierJson != null &&
                     !string.IsNullOrEmpty(((string)bindingContext.ValueProvider.GetValue(TestImageSetKey))))
@@ -120,7 +120,7 @@ namespace VisualRecognition.ViewModels
                 Console.WriteLine(ex.StackTrace);
             }
 
-            bindingContext.Result = ModelBindingResult.Success(bindingContext.FieldName, result);
+            bindingContext.Result = ModelBindingResult.Success(result);
             return;
         }
     }
