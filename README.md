@@ -40,7 +40,7 @@ applications:
   ```
 
 ## Running the app locally
-This sample app targets the ASP.NET Core and the .NET CoreCLR version 1.0.0-rc2-final using .NET CLI version 1.0.0-preview1-002702.
+This sample app targets the ASP.NET Core and the .NET CoreCLR version 1.0.0 using .NET CLI version 1.0.0-preview2-003121.
 
 1. Copy the credentials from your `watson_vision_combined` service in Bluemix to `src/VisualRecognition/vcap_services.json`, you can see the credentials using:
 
