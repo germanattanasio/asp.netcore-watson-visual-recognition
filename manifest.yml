@@ -4,6 +4,6 @@
     plan: free
 applications:
 - name: visual-recognition-aspnet
-  memory: 256M
+  memory: 512M
   services:
   - visual-recognition-service
