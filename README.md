@@ -18,7 +18,7 @@ Give it a try! Click the button below to fork this project into IBM DevOps Servi
   ```none
 applications:
 - name: <application-name>
-  memory: 256M
+  memory: 512M
   services:
   - visual-recognition-service
   ```
