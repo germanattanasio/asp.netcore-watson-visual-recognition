@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
-    "Microsoft.AspNetCore.Mvc": "1.0.0",
-    "Microsoft.AspNetCore.Server.Kestrel": "1.0.0",
+    "Microsoft.AspNetCore.Mvc": "1.0.1",
+    "Microsoft.AspNetCore.Server.Kestrel": "1.0.1",
     "Microsoft.AspNetCore.StaticFiles": "1.0.0",
     "Microsoft.Extensions.Configuration": "1.0.0",
     "Microsoft.Extensions.Configuration.CommandLine": "1.0.0",
@@ -24,18 +24,18 @@
     "Microsoft.Extensions.Configuration.Abstractions": "1.0.0",
     "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
     "System.IO.Compression.ZipFile": "4.0.1",
-    "WatsonServices": "1.0.0"
+    "WatsonServices": "1.0.1"
   },
   "frameworks": {
     "netcoreapp1.0": {
       "dependencies": {
         "Microsoft.NETCore.App": {
           "type": "platform",
-          "version": "1.0.0"
+          "version": "1.0.1"
         }
       },
       "imports": [
-        "dnxcore50",
+        "netcoreapp1.0",
         "netcore45",
         "portable-net45+netcore45+wp8+wp81+wpa81"
       ]
@@ -54,5 +54,5 @@
       "obj"
     ]
   },
-  "version": "1.0.0"
+  "version": "1.0.1"
 }
