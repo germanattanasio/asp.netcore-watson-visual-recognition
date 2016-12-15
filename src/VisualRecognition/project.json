@@ -13,29 +13,28 @@
     "preserveCompilationContext": true
   },
   "dependencies": {
-    "Microsoft.AspNetCore.Diagnostics": "1.0.0",
-    "Microsoft.AspNetCore.Mvc": "1.0.1",
-    "Microsoft.AspNetCore.Server.Kestrel": "1.0.1",
-    "Microsoft.AspNetCore.StaticFiles": "1.0.0",
-    "Microsoft.Extensions.Configuration": "1.0.0",
-    "Microsoft.Extensions.Configuration.CommandLine": "1.0.0",
-    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0",
-    "Microsoft.Extensions.Configuration.Abstractions": "1.0.0",
-    "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
+    "Microsoft.AspNetCore.Diagnostics": "1.0.1",
+    "Microsoft.AspNetCore.Mvc": "1.0.2",
+    "Microsoft.AspNetCore.Server.Kestrel": "1.0.2",
+    "Microsoft.AspNetCore.StaticFiles": "1.0.1",
+    "Microsoft.Extensions.Configuration": "1.0.1",
+    "Microsoft.Extensions.Configuration.CommandLine": "1.0.1",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.1",
+    "Microsoft.Extensions.Configuration.Json": "1.0.1",
+    "Microsoft.Extensions.Configuration.Abstractions": "1.0.1",
+    "Microsoft.Extensions.Configuration.FileExtensions": "1.0.1",
     "System.IO.Compression.ZipFile": "4.0.1",
-    "WatsonServices": "1.0.1"
+    "WatsonServices": "1.0.3"
   },
   "frameworks": {
     "netcoreapp1.0": {
       "dependencies": {
         "Microsoft.NETCore.App": {
           "type": "platform",
-          "version": "1.0.1"
+          "version": "1.0.3"
         }
       },
       "imports": [
-        "netcoreapp1.0",
         "netcore45",
         "portable-net45+netcore45+wp8+wp81+wpa81"
       ]
@@ -47,12 +46,9 @@
       "wwwroot"
     ],
     "exclude": [
-      "**.xproj",
-      "**.user",
-      "**.vspscc",
       "bin",
       "obj"
     ]
   },
-  "version": "1.0.1"
+  "version": "1.0.3"
 }
