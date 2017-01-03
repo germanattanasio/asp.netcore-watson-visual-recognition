@@ -15,7 +15,8 @@ Give it a try! Click the button below to fork this project into IBM DevOps Servi
 2. Download and install the [Cloud-foundry CLI][cloud_foundry] tool
 
 3. Edit the `manifest.yml` file and change the `<application-name>` to something unique.
-  ```none
+
+  ```yml
 applications:
 - name: <application-name>
   memory: 512M
@@ -25,30 +26,36 @@ applications:
   The name you use will determine your application url initially, e.g. `<application-name>.mybluemix.net`.
 
 4. Connect to Bluemix using the command line interface
+
   ```sh
-  $ cf login -a https://api.ng.bluemix.net -u <your user ID>
+  cf login -a https://api.ng.bluemix.net -u <your user ID>
   ```
 
 5. Create the Visual Recognition service in Bluemix
+
   ```sh
-  $ cf create-service watson_vision_combined free visual-recognition-service
+  cf create-service watson_vision_combined free visual-recognition-service
   ```
 
 6. Push it live!
+
   ```sh
-  $ cf push
+  cf push
   ```
 
 ## Running the app locally
+
 This sample app targets the ASP.NET Core and the .NET CoreCLR version 1.0.0 using .NET CLI version 1.0.0-preview2-003121.
 
 1. Copy the credentials from your `watson_vision_combined` service in Bluemix to `src/VisualRecognition/vcap_services.json`, you can see the credentials using:
 
     ```sh
-    $ cf env <application-name>
+    cf env <application-name>
     ```
+
     Example output:
-    ```sh
+
+    ```json
     System-Provided:
     {
     "VCAP_SERVICES": {
@@ -74,9 +81,10 @@ This sample app targets the ASP.NET Core and the .NET CoreCLR version 1.0.0 usin
 3. Run the project
 
   3.1. **(Linux/Mac)**. Go to the solution folder in a terminal and run:
+
   ```sh
-  $ dotnet restore
-  $ dotnet run -p src/VisualRecognition
+  dotnet restore
+  dotnet run -p src/VisualRecognition
   ```
 
   3.2. **(Windows)**.
@@ -94,8 +102,8 @@ This sample app targets the ASP.NET Core and the .NET CoreCLR version 1.0.0 usin
 
 The primary source of debugging information for your Bluemix app is the logs. To see them, run the following command using the Cloud Foundry CLI:
 
-  ```
-  $ cf logs <application-name> --recent
+  ```sh
+  cf logs <application-name> --recent
   ```
 For more detailed information on troubleshooting your application, see the [Troubleshooting section](https://www.ng.bluemix.net/docs/troubleshoot/tr.html) in the Bluemix documentation.
 
@@ -108,9 +116,11 @@ For more detailed information on troubleshooting your application, see the [Trou
   See [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Open Source @ IBM
+
   Find more open source projects on the [IBM Github Page](http://ibm.github.io/)
 
 ### Useful links
+
 [IBM Bluemix](https://bluemix.net/)  
 [IBM Bluemix Documentation](https://www.ng.bluemix.net/docs/)  
 [IBM Bluemix Developers Community](http://developer.ibm.com/bluemix)  
