@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +16,9 @@ namespace VisualRecognition
         public Startup(IHostingEnvironment env)
         {
             var configBuilder = new ConfigurationBuilder()
-                .AddJsonFile("vcap_services.json", optional: true) // optionally read VCAP_SERVICES info from json file
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("vcap-local.json", optional: true) // optionally read VCAP_SERVICES info from json file which
+                                                                // vcap-local.json is only copied to output when VCAP_SERVICES environment variable is undefined
                 .AddVcapServices(); // add values from VCAP_SERVICES environment variable if it exists
 
             Configuration = configBuilder.Build();
@@ -55,13 +58,9 @@ namespace VisualRecognition
 
         public static void Main(string[] args)
         {
-            var config = new ConfigurationBuilder()
-                .AddCommandLine(args)
-                .Build();
-
-            var host = new WebHostBuilder()
+           var host = new WebHostBuilder()
                 .UseKestrel()
-                .UseConfiguration(config)
+                .UseContentRoot(AppContext.BaseDirectory)
                 .UseStartup<Startup>()
                 .Build();
 
