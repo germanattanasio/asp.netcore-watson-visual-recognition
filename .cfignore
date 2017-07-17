@@ -3,11 +3,7 @@
 artifacts/
 bin/
 obj/
-*.sln
-*.xproj
-*.xproj.user
 README.md
 project.lock.json
-Properties/
-vcap_services.json
+vcap-local.json
 temp_files/

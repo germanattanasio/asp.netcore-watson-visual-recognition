@@ -1,2 +1,2 @@
 [config]
-project = src/VisualRecognition/VisualRecognition.xproj
+project = src/VisualRecognition/VisualRecognition.csproj
