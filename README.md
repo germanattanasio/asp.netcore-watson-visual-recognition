@@ -2,6 +2,8 @@
 
   The IBM Watson [Visual Recognition][service_url] service analyzes the visual content of images to understand them without any input text describing the images.
 
+## DEPRECATED: this repo is no longer actively maintained. It can still be used as reference, but may contain outdated or unpatched code.
+
 Give it a try! Click the button below to fork this project into IBM DevOps Services and deploy it on Bluemix.
 
 [![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy)
